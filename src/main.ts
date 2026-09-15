@@ -10,10 +10,31 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  app.enableCors({
-    origin: 'http://localhost:3000', // 👈 Разрешаем frontend-у обращаться к API
-    credentials: true, // 👈 Разрешаем передавать куки
+   app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const allowedOrigins = [
+        'https://chorapp.wald.pro',
+        'http://localhost:5173',
+      ];
+
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        origin.startsWith('http://localhost:') ||
+        origin.startsWith('chrome-extension://');
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin '${origin}' not allowed by CORS`));
+      }
+    },
+    credentials: true,
   });
+
   app.use(cookieParser());
 
   await app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
