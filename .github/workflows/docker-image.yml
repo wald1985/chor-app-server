@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE: 'chor_app_serv'
-  DEPLOY_DIR: '/root/chor-app-serv/'
+  DEPLOY_DIR: '/opt/chor_app_serv/'
   CONTAINER_NAME: 'chor_app_serv'
   HOST_PORT: '5050'
   CONTAINER_PORT: '5050'
