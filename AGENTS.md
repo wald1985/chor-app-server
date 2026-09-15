@@ -77,11 +77,27 @@ Rehearsal, Dirigent -> Conductor, Klavierspieler -> Pianist, Mappe ->
 Folder, Gemeinschaft -> Community). This supersedes an earlier "keep
 German in code" instruction from initial setup.
 
+## Implemented so far
+- **Identity & Community** (`src/identity/`, `src/shared/prisma/`):
+  registration (creates Community + Administrator User + Membership),
+  email+password login, `GET /auth/me`. Auth mechanism is decided — see
+  `../chor-app-docs/decisions/0004-auth-mechanism.md` (email+password, JWT
+  in `Authorization: Bearer <token>`, not a cookie). Spec:
+  `../chor-app-docs/openspec/specs/identity/registration-and-login/spec.md`
+  (once archived; until then see
+  `../chor-app-docs/openspec/changes/add-identity-community-auth/`).
+- Prisma + PostgreSQL connected (`prisma/schema.prisma`,
+  `prisma.config.ts` — Prisma 7 reads the connection string from
+  `prisma.config.ts`/`@prisma/adapter-pg`, not from `schema.prisma`'s
+  `datasource` block).
+
 ## Open questions (don't assume — check specs/ADRs or ask)
-Concrete auth mechanism, invite email mechanics (token/expiry/resend —
-the channel itself is decided: email), role granularity beyond
-Administrator/member, hosting, SMTP server details (self-hosted vs.
-relay), and exact bounded-context boundaries. See
-`../chor-app-docs/openspec/config.yaml`,
-`../chor-app-docs/decisions/0002-server-stack.md`, and
-`../chor-app-docs/decisions/0003-multi-tenancy-identity.md`.
+Invite email mechanics (token/expiry/resend — the channel itself is
+decided: email), role granularity beyond Administrator/member, hosting,
+SMTP server details (self-hosted vs. relay), an "active Community" guard
+for Community-scoped requests (nothing is Community-scoped yet besides
+Identity itself), and exact bounded-context boundaries beyond Identity &
+Community. See `../chor-app-docs/openspec/config.yaml`,
+`../chor-app-docs/decisions/0002-server-stack.md`,
+`../chor-app-docs/decisions/0003-multi-tenancy-identity.md`, and
+`../chor-app-docs/decisions/0004-auth-mechanism.md`.
