@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CommunityRole {
+  ADMINISTRATOR
+  MEMBER
+}
+
+model Community {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships CommunityMembership[]
+
+  @@map("communities")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships CommunityMembership[]
+
+  @@map("users")
+}
+
+model CommunityMembership {
+  id          String        @id @default(uuid())
+  role        CommunityRole
+  createdAt   DateTime      @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, communityId])
+  @@map("community_memberships")
+}
