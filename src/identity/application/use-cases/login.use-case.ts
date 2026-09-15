@@ -52,6 +52,7 @@ export class LoginUseCase {
     const accessToken = this.tokenIssuer.issue({
       sub: user.id,
       email: user.email,
+      tokenVersion: user.tokenVersion,
     });
 
     return {

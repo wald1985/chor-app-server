@@ -1,6 +1,7 @@
 export interface AuthTokenPayload {
   sub: string;
   email: string;
+  tokenVersion: number;
 }
 
 export interface TokenIssuer {

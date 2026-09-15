@@ -17,10 +17,22 @@ export class PrismaUserRepository implements UserRepository {
     return record ? this.toDomain(record) : null;
   }
 
+  async updatePasswordHash(
+    userId: string,
+    passwordHash: string,
+  ): Promise<number> {
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash, tokenVersion: { increment: 1 } },
+    });
+    return updated.tokenVersion;
+  }
+
   private toDomain(record: {
     id: string;
     email: string;
     passwordHash: string;
+    tokenVersion: number;
     name: string;
     createdAt: Date;
   }): User {
@@ -28,6 +40,7 @@ export class PrismaUserRepository implements UserRepository {
       id: record.id,
       email: record.email,
       passwordHash: record.passwordHash,
+      tokenVersion: record.tokenVersion,
       name: record.name,
       createdAt: record.createdAt,
     });

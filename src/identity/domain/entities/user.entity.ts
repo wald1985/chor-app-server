@@ -2,6 +2,7 @@ export interface UserProps {
   id: string;
   email: string;
   passwordHash: string;
+  tokenVersion: number;
   name: string;
   createdAt: Date;
 }
@@ -19,6 +20,10 @@ export class User {
 
   get passwordHash(): string {
     return this.props.passwordHash;
+  }
+
+  get tokenVersion(): number {
+    return this.props.tokenVersion;
   }
 
   get name(): string {

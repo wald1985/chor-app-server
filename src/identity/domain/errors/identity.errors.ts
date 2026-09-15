@@ -11,3 +11,17 @@ export class InvalidCredentialsError extends Error {
     this.name = 'InvalidCredentialsError';
   }
 }
+
+export class IncorrectCurrentPasswordError extends Error {
+  constructor() {
+    super('Current password is incorrect');
+    this.name = 'IncorrectCurrentPasswordError';
+  }
+}
+
+export class InvalidOrExpiredResetTokenError extends Error {
+  constructor() {
+    super('Password reset token is invalid or expired');
+    this.name = 'InvalidOrExpiredResetTokenError';
+  }
+}

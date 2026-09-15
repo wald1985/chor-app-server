@@ -51,6 +51,7 @@ export class PrismaRegistrationRepository implements RegistrationRepository {
         id: result.user.id,
         email: result.user.email,
         passwordHash: result.user.passwordHash,
+        tokenVersion: result.user.tokenVersion,
         name: result.user.name,
         createdAt: result.user.createdAt,
       }),
