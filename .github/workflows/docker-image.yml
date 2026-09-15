@@ -95,8 +95,8 @@ jobs:
             docker load -i $DOCKER_IMAGE.tar &&
             
             # Перезапускаем контейнер
-            docker-compose down && 
-            docker-compose up -d &&
+            docker compose down && 
+            docker compose up -d &&
             
             # Удаляем временный tar файл
             rm $DOCKER_IMAGE.tar &&
