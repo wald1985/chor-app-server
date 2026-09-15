@@ -1,18 +1,106 @@
-name: Docker Image CI
+name: Node.js CI with Docker Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
+
+env:
+  DOCKER_IMAGE: 'chor_app_serv'
+  DEPLOY_DIR: '/root/chor-app-serv/'
+  CONTAINER_NAME: 'chor_app_serv'
+  HOST_PORT: '5050'
+  CONTAINER_PORT: '5050'
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # Шаг 1: Получение кода из репозитория
+      - uses: actions/checkout@v4
+
+      # Шаг 2: Установка Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      # Шаг 3: Установка зависимостей
+      - run: npm ci
+
+      # Шаг 4: Установка Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Шаг 5: Сборка Docker-образа
+      - name: Build Docker image
+        run: |
+          docker build -t $DOCKER_IMAGE:latest .
+
+      # Шаг 6: Сохранение Docker-образа в tar-файл
+      - name: Save Docker image
+        run: |
+          docker save $DOCKER_IMAGE:latest -o $DOCKER_IMAGE.tar
+
+      # Шаг 7: Настройка SSH-агента и добавление известного хоста
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      # Шаг 8: Копирование файлов на удаленный сервер
+      - name: Copy files to remote server
+        run: |
+          # Создаем директорию перед копированием
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "mkdir -p $DEPLOY_DIR"
+          
+          # Копируем образ и docker-compose
+          scp $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+
+  deploy-to-server:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Шаг 1: Настройка SSH-агента
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      # Шаг 2: Подготовка папок и деплой
+      - name: Prepare environment and deploy
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            cd $DEPLOY_DIR &&
+            
+            # Создаем папку data для БД и папку для бэкапов (Persistent)
+            mkdir -p data backups_history &&
+            chmod 777 data backups_history &&
+            
+            # Загружаем образ из архива
+            docker load -i $DOCKER_IMAGE.tar &&
+            
+            # Перезапускаем контейнер
+            docker-compose down && 
+            docker-compose up -d &&
+            
+            # Удаляем временный tar файл
+            rm $DOCKER_IMAGE.tar &&
+            
+            # Очистка старых неиспользуемых образов
+            docker image prune -f
+          "
