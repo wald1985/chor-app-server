@@ -14,38 +14,64 @@ env:
   CONTAINER_PORT: '5050'
 
 jobs:
+  # Runs on every push and PR. Nothing below it deploys unless this passes.
+  checks:
+    runs-on: ubuntu-latest
+    env:
+      # prisma.config.ts resolves DATABASE_URL even for `prisma generate`,
+      # which never connects - a placeholder is enough here.
+      DATABASE_URL: 'postgresql://user:password@localhost:5432/db?schema=public'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Same major as the Dockerfile's base image - keep them in sync.
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      # Includes prettier via eslint-plugin-prettier.
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
   build:
+    # PRs only get the checks above - deploying needs a push to main.
+    if: github.event_name == 'push'
+    needs: checks
     runs-on: ubuntu-latest
 
     steps:
       # Шаг 1: Получение кода из репозитория
       - uses: actions/checkout@v4
 
-      # Шаг 2: Установка Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-
-      # Шаг 3: Установка зависимостей
-      - run: npm ci
-
-      # Шаг 4: Установка Docker Buildx
+      # Шаг 2: Установка Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Шаг 5: Сборка Docker-образа
+      # Шаг 3: Сборка Docker-образа
       - name: Build Docker image
         run: |
           docker build -t $DOCKER_IMAGE:latest .
 
-      # Шаг 6: Сохранение Docker-образа в tar-файл
+      # Шаг 4: Сохранение Docker-образа в tar-файл
       - name: Save Docker image
         run: |
           docker save $DOCKER_IMAGE:latest -o $DOCKER_IMAGE.tar
 
-      # Шаг 7: Настройка SSH-агента и добавление известного хоста
+      # Шаг 5: Настройка SSH-агента и добавление известного хоста
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -56,19 +82,20 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # Шаг 8: Копирование файлов на удаленный сервер
+      # Шаг 6: Копирование файлов на удаленный сервер
       - name: Copy files to remote server
         run: |
           # Создаем директорию перед копированием
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "mkdir -p $DEPLOY_DIR"
-          
+
           # Копируем образ и docker-compose
           scp $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
           scp docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
 
   deploy-to-server:
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     needs: build
+    runs-on: ubuntu-latest
     steps:
       # Шаг 1: Настройка SSH-агента
       - name: Setup SSH
@@ -81,26 +108,32 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # Шаг 2: Подготовка папок и деплой
+      # Шаг 2: Деплой. `set -e` - любая упавшая команда валит весь шаг.
+      # Миграции применяются новым образом ДО замены контейнера: если
+      # `prisma migrate deploy` упадет, старый контейнер продолжит работать,
+      # а job станет красным.
+      # `docker compose up -d` возвращает 0, даже если приложение сразу
+      # падает (например, не хватает ключа в .env) - поэтому через 15 с
+      # проверяем, что контейнер работает и ни разу не перезапускался.
       - name: Prepare environment and deploy
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            cd $DEPLOY_DIR &&
-            
-            # Создаем папку data для БД и папку для бэкапов (Persistent)
-            mkdir -p data backups_history &&
-            chmod 777 data backups_history &&
-            
-            # Загружаем образ из архива
-            docker load -i $DOCKER_IMAGE.tar &&
-            
-            # Перезапускаем контейнер
-            docker compose down && 
-            docker compose up -d &&
-            
-            # Удаляем временный tar файл
-            rm $DOCKER_IMAGE.tar &&
-            
-            # Очистка старых неиспользуемых образов
+            set -e
+            cd $DEPLOY_DIR
+
+            mkdir -p data backups_history
+            chmod 777 data backups_history
+
+            docker load -i $DOCKER_IMAGE.tar
+
+            docker compose run --rm -T server npx prisma migrate deploy
+
+            docker compose down
+            docker compose up -d
+
+            sleep 15
+            docker inspect -f '{{.State.Status}} {{.RestartCount}}' $CONTAINER_NAME | grep -qx 'running 0' || { docker logs --tail 50 $CONTAINER_NAME; exit 1; }
+
+            rm $DOCKER_IMAGE.tar
             docker image prune -f
           "

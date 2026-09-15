@@ -10,8 +10,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-   app.enableCors({
-    origin: (origin, callback) => {
+  app.enableCors({
+    // Typed explicitly: enableCors() accepts CorsOptions | CorsOptionsDelegate,
+    // so TypeScript can't infer these parameters and they end up `any`.
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
       if (!origin) {
         return callback(null, true);
       }

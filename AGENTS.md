@@ -91,9 +91,47 @@ German in code" instruction from initial setup.
   `prisma.config.ts`/`@prisma/adapter-pg`, not from `schema.prisma`'s
   `datasource` block).
 
+## Deployment & CI/CD
+**Working and deployed.** Full description + known issues:
+`../chor-app-docs/decisions/0006-deployment-as-implemented.md` (ADR 0005
+is superseded — don't follow it). Summary:
+- `.github/workflows/docker-image.yml`, job **`checks`** (every push and
+  PR): `npm ci`, `prisma generate`, `npm run lint:check` (eslint incl.
+  prettier, no `--fix` — `npm run lint` fixes in place), `npm test` (unit
+  tests only; e2e needs a DB), `npm run build`. Runs on Node 20 — keep it
+  in sync with the Dockerfile's base image.
+- Jobs **`build` → `deploy-to-server`** run only on a **push to `main`**
+  after `checks` passed — a PR never deploys. They build the image on the
+  runner, copy it + `docker-compose.yml` over SSH to `/opt/chor_app_serv/`
+  and run a `set -e` remote script: `docker load` →
+  `docker compose run --rm -T server npx prisma migrate deploy` →
+  `docker compose down` → `up -d` → fail the job (with logs) unless the
+  container is still running without restarts 15 s later.
+  `https://chorappserver.wald.pro`, host port `5050` behind the host's TLS
+  reverse proxy. Secrets: `SSH_PRIVATE_KEY`, `SERVER_USER`, `SERVER_IP`.
+- `Dockerfile`: `node:20-slim`, `npm install` → `prisma generate` →
+  `npm run build`, runs `node dist/main`. Keeps devDependencies — the
+  deploy's migration step needs the `prisma` CLI from them.
+- **Migrations are applied on every deploy, while the old container is
+  still serving.** Keep migrations backward-compatible with the previous
+  release (add columns/tables first, drop them in a later release). If
+  `migrate deploy` fails, the job goes red and production stays on the old
+  version.
+- **Runtime config** comes from `/opt/chor_app_serv/.env` on the host
+  (`env_file` in `docker-compose.yml`), maintained by hand, never in git or
+  CI. A new env key must be added there *and* to `.env.example`. Postgres
+  runs as a separate container on the host, reached via
+  `host.docker.internal:5432`.
+- **CORS** (`src/main.ts`): `https://chorapp.wald.pro` + any
+  `http://localhost:*`. A new client domain must be added here **and** to
+  `chor-app-client`'s `src/utils/apiConfig.ts`.
+- Don't re-add `incremental: true` to `tsconfig.json` — together with
+  `deleteOutDir` it makes `nest build` emit nothing (missing
+  `dist/main.js`).
+
 ## Open questions (don't assume — check specs/ADRs or ask)
 Invite email mechanics (token/expiry/resend — the channel itself is
-decided: email), role granularity beyond Administrator/member, hosting,
+decided: email), role granularity beyond Administrator/member,
 SMTP server details (self-hosted vs. relay), an "active Community" guard
 for Community-scoped requests (nothing is Community-scoped yet besides
 Identity itself), and exact bounded-context boundaries beyond Identity &
