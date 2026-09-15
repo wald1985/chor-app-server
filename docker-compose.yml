@@ -1,0 +1,18 @@
+services:
+  server:
+    build:
+      context: .
+    image: chor_app_server:latest
+    container_name: chor_app_server
+    restart: unless-stopped
+    env_file:
+      - .env
+    # Lets the container reach Postgres via the host's published port
+    # (e.g. "chor-app-db" on 0.0.0.0:5432). In your .env, set:
+    #   DATABASE_URL=postgresql://user:password@host.docker.internal:5432/db?schema=public
+    # If the DB container instead runs on a shared docker network, remove
+    # extra_hosts below and add this service to that network instead.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5000:5000"
