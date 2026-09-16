@@ -8,6 +8,7 @@ import {
   RegisterCommunityAdministratorResult,
   RegistrationRepository,
 } from '../../domain/ports/registration-repository.port';
+import { CommunityPermission } from '../../domain/value-objects/community-permission';
 import { CommunityRole } from '../../domain/value-objects/community-role';
 
 @Injectable()
@@ -60,6 +61,8 @@ export class PrismaRegistrationRepository implements RegistrationRepository {
         userId: result.membership.userId,
         communityId: result.membership.communityId,
         role: result.membership.role as unknown as CommunityRole,
+        permissions: result.membership
+          .permissions as unknown as CommunityPermission[],
         createdAt: result.membership.createdAt,
       }),
     };

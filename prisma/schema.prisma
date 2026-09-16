@@ -11,6 +11,10 @@ enum CommunityRole {
   MEMBER
 }
 
+enum CommunityPermission {
+  PEOPLE_MANAGE
+}
+
 model Community {
   id        String   @id @default(uuid())
   name      String
@@ -51,9 +55,10 @@ model PasswordResetToken {
 }
 
 model CommunityMembership {
-  id          String        @id @default(uuid())
+  id          String                @id @default(uuid())
   role        CommunityRole
-  createdAt   DateTime      @default(now())
+  permissions CommunityPermission[] @default([])
+  createdAt   DateTime              @default(now())
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

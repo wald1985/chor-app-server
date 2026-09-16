@@ -25,3 +25,10 @@ export class InvalidOrExpiredResetTokenError extends Error {
     this.name = 'InvalidOrExpiredResetTokenError';
   }
 }
+
+export class AdministratorPermissionsImmutableError extends Error {
+  constructor() {
+    super('Administrator permissions cannot be modified');
+    this.name = 'AdministratorPermissionsImmutableError';
+  }
+}
