@@ -34,6 +34,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Audit dependencies
+        run: npm audit --audit-level=high --omit=dev
+
       - name: Prisma generate
         run: npx prisma generate
 

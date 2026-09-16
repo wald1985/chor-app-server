@@ -33,6 +33,7 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
+  // eslint-disable-next-line max-params -- TODO(people-plan 0.1): auth controller DI constructor has 6 use cases
   constructor(
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
