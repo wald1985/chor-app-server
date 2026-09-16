@@ -77,6 +77,14 @@ Rehearsal, Dirigent -> Conductor, Klavierspieler -> Pianist, Mappe ->
 Folder, Gemeinschaft -> Community). This supersedes an earlier "keep
 German in code" instruction from initial setup.
 
+## Documentation language
+**Documentation language in this repo: Russian** (decided 2026-09-16).
+Everything under `docs/` (feature research, design, plans, e.g.
+`docs/feature/<feature>/`) is written in Russian. Code, identifiers,
+code comments, API, commit messages stay English; domain terms inside
+Russian text use the English names from the glossary (e.g. `Person`,
+`Rehearsal`). Specs/ADRs in `../chor-app-docs` stay English.
+
 ## Implemented so far
 - **Identity & Community** (`src/identity/`, `src/shared/prisma/`):
   registration (creates Community + Administrator User + Membership),
