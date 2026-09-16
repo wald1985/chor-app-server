@@ -50,10 +50,54 @@ jobs:
       - name: Build
         run: npm run build
 
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: chor_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: 'postgresql://test_user:test_password@localhost:5433/chor_test?schema=public'
+      JWT_SECRET: 'test-jwt-secret-key-that-is-at-least-32-chars-long-e2e'
+      JWT_EXPIRES_IN: '1d'
+      PASSWORD_RESET_TOKEN_TTL_MINUTES: '60'
+      MAIL_HOST: 'localhost'
+      MAIL_PORT: '1025'
+      MAIL_USERNAME: 'test@example.com'
+      MAIL_PWD: 'testpassword'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
   build:
     # PRs only get the checks above - deploying needs a push to main.
     if: github.event_name == 'push'
-    needs: checks
+    needs: [checks, e2e]
     runs-on: ubuntu-latest
 
     steps:

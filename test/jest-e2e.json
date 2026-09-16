@@ -1,9 +1,15 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "test/.*\\.e2e-spec\\.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!(@nestjs/config|@nestjs/jwt|@nestjs/passport)/)"
+  ],
+  "maxWorkers": 1,
+  "setupFiles": ["<rootDir>/test/utils/setup-env.ts"],
+  "globalSetup": "<rootDir>/test/utils/global-setup.ts"
 }
