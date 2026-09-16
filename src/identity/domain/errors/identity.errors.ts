@@ -32,3 +32,10 @@ export class AdministratorPermissionsImmutableError extends Error {
     this.name = 'AdministratorPermissionsImmutableError';
   }
 }
+
+export class NotCommunityMemberError extends Error {
+  constructor() {
+    super('Not a member of this community');
+    this.name = 'NotCommunityMemberError';
+  }
+}

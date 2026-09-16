@@ -29,7 +29,10 @@ import { CryptoResetTokenGenerator } from './infrastructure/security/crypto-rese
 import { JwtTokenIssuer } from './infrastructure/security/jwt-token-issuer';
 import { JwtStrategy } from './infrastructure/security/jwt.strategy';
 
+import { ResolveMembershipUseCase } from './application/use-cases/resolve-membership.use-case';
 import { AuthController } from './interface/controllers/auth.controller';
+import { CommunityMemberGuard } from './interface/guards/community-member.guard';
+import { JwtAuthGuard } from './interface/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -71,6 +74,16 @@ import { AuthController } from './interface/controllers/auth.controller';
     { provide: RESET_TOKEN_GENERATOR, useClass: CryptoResetTokenGenerator },
     { provide: PASSWORD_HASHER, useClass: BcryptPasswordHasher },
     { provide: TOKEN_ISSUER, useClass: JwtTokenIssuer },
+    ResolveMembershipUseCase,
+    JwtAuthGuard,
+    CommunityMemberGuard,
+  ],
+  exports: [
+    JwtAuthGuard,
+    CommunityMemberGuard,
+    ResolveMembershipUseCase,
+    PassportModule,
+    JwtModule,
   ],
 })
 export class IdentityModule {}
