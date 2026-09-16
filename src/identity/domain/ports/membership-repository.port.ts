@@ -1,10 +1,12 @@
 import { CommunityMembership } from '../entities/community-membership.entity';
+import { CommunityPermission } from '../value-objects/community-permission';
 import { CommunityRole } from '../value-objects/community-role';
 
 export interface CommunityMembershipView {
   communityId: string;
   communityName: string;
   role: CommunityRole;
+  permissions: CommunityPermission[];
 }
 
 export interface MembershipRepository {

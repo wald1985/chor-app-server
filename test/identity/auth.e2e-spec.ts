@@ -101,7 +101,9 @@ describe('Auth (e2e)', () => {
       expect(res.body.memberships[0]).toMatchObject({
         communityName: 'Test Choir',
         role: 'ADMINISTRATOR',
+        permissions: ['PEOPLE_MANAGE'],
       });
+      expect(typeof res.body.memberships[0].communityId).toBe('string');
     });
 
     it('rejects invalid password with 401', async () => {
@@ -118,7 +120,7 @@ describe('Auth (e2e)', () => {
   });
 
   describe('GET /auth/me', () => {
-    it('returns user and memberships when authenticated', async () => {
+    it('returns user and memberships when authenticated as Administrator', async () => {
       await request(app.getHttpServer())
         .post('/auth/register')
         .send({
@@ -145,7 +147,77 @@ describe('Auth (e2e)', () => {
         .expect(200);
 
       expect(res.body.user.email).toBe('user@example.com');
+      expect(res.body.user.name).toBe('Test User');
       expect(res.body.memberships).toHaveLength(1);
+      expect(res.body.memberships[0]).toMatchObject({
+        communityName: 'Test Choir',
+        role: 'ADMINISTRATOR',
+        permissions: ['PEOPLE_MANAGE'],
+      });
+    });
+
+    it('returns empty permissions for MEMBER without permissions', async () => {
+      const adminRes = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          email: 'admin_choir@example.com',
+          password: 'Password123!',
+          name: 'Admin Choir',
+          communityName: 'Choir Community',
+        })
+        .expect(201);
+
+      const communityId = adminRes.body.communityId;
+
+      const memberRes = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          email: 'member@example.com',
+          password: 'Password123!',
+          name: 'Member User',
+          communityName: 'Dummy Community',
+        })
+        .expect(201);
+
+      const memberUserId = memberRes.body.userId;
+
+      await prisma.communityMembership.create({
+        data: {
+          userId: memberUserId,
+          communityId,
+          role: 'MEMBER',
+          permissions: [],
+        },
+      });
+
+      const memberLoginRes = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          email: 'member@example.com',
+          password: 'Password123!',
+        })
+        .expect(200);
+
+      const memberMembership = memberLoginRes.body.memberships.find(
+        (m: { communityId: string }) => m.communityId === communityId,
+      );
+      expect(memberMembership).toMatchObject({
+        role: 'MEMBER',
+        permissions: [],
+      });
+
+      const meRes = await request(app.getHttpServer())
+        .get('/auth/me')
+        .set('Authorization', `Bearer ${memberLoginRes.body.accessToken}`)
+        .expect(200);
+
+      const meMemberMembership = meRes.body.memberships.find(
+        (m: { communityId: string }) => m.communityId === communityId,
+      );
+      expect(meMemberMembership).toMatchObject({
+        role: 'MEMBER',
+        permissions: [],
+      });
     });
 
     it('rejects unauthenticated request with 401', async () => {

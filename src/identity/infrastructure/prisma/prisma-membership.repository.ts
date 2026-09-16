@@ -18,11 +18,23 @@ export class PrismaMembershipRepository implements MembershipRepository {
       include: { community: true },
     });
 
-    return records.map((record) => ({
-      communityId: record.communityId,
-      communityName: record.community.name,
-      role: record.role as unknown as CommunityRole,
-    }));
+    return records.map((record) => {
+      const membership = new CommunityMembership({
+        id: record.id,
+        userId: record.userId,
+        communityId: record.communityId,
+        role: record.role as unknown as CommunityRole,
+        permissions: record.permissions as unknown as CommunityPermission[],
+        createdAt: record.createdAt,
+      });
+
+      return {
+        communityId: record.communityId,
+        communityName: record.community.name,
+        role: record.role as unknown as CommunityRole,
+        permissions: membership.effectivePermissions(),
+      };
+    });
   }
 
   async findByUserAndCommunity(
