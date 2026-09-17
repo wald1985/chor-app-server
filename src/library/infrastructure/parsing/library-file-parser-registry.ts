@@ -4,10 +4,14 @@ import {
   ParseResult,
 } from '../../domain/ports/library-file-parser.port';
 import { JsonLibraryFileParser } from './json-library-file-parser';
+import { CsvLibraryFileParser } from './csv-library-file-parser';
 
 @Injectable()
 export class DefaultLibraryFileParserRegistry implements LibraryFileParserRegistry {
-  constructor(private readonly jsonParser: JsonLibraryFileParser) {}
+  constructor(
+    private readonly jsonParser: JsonLibraryFileParser,
+    private readonly csvParser: CsvLibraryFileParser,
+  ) {}
 
   parse(buffer: Buffer, filename: string): ParseResult {
     const ext = this.getExtension(filename);
@@ -16,7 +20,11 @@ export class DefaultLibraryFileParserRegistry implements LibraryFileParserRegist
       return this.jsonParser.parse(buffer, filename);
     }
 
-    if (ext === '.csv' || ext === '.xlsx') {
+    if (ext === '.csv') {
+      return this.csvParser.parse(buffer, filename);
+    }
+
+    if (ext === '.xlsx') {
       return {
         ok: false,
         errors: [

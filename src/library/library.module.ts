@@ -48,6 +48,7 @@ import { LibraryController } from './interface/controllers/library.controller';
 
 import { LIBRARY_FILE_PARSER_REGISTRY } from './domain/ports/library-file-parser.port';
 import { JsonLibraryFileParser } from './infrastructure/parsing/json-library-file-parser';
+import { CsvLibraryFileParser } from './infrastructure/parsing/csv-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from './infrastructure/parsing/library-file-parser-registry';
 import { PreviewImportUseCase } from './application/use-cases/imports/preview-import.use-case';
 import { ApplyImportUseCase } from './application/use-cases/imports/apply-import.use-case';
@@ -95,6 +96,7 @@ const USE_CASES = [
     { provide: ID_GENERATOR, useClass: CryptoIdGenerator },
     { provide: CLOCK, useClass: SystemClock },
     JsonLibraryFileParser,
+    CsvLibraryFileParser,
     DefaultLibraryFileParserRegistry,
     {
       provide: LIBRARY_FILE_PARSER_REGISTRY,

@@ -1,9 +1,11 @@
 import { JsonLibraryFileParser } from './json-library-file-parser';
+import { CsvLibraryFileParser } from './csv-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from './library-file-parser-registry';
 
 describe('JsonLibraryFileParser & DefaultLibraryFileParserRegistry (Phase C7)', () => {
   const parser = new JsonLibraryFileParser();
-  const registry = new DefaultLibraryFileParserRegistry(parser);
+  const csvParser = new CsvLibraryFileParser();
+  const registry = new DefaultLibraryFileParserRegistry(parser, csvParser);
 
   describe('JsonLibraryFileParser', () => {
     it('parses valid JSON library file successfully', () => {
@@ -158,13 +160,7 @@ describe('JsonLibraryFileParser & DefaultLibraryFileParserRegistry (Phase C7)', 
       expect(res.ok).toBe(true);
     });
 
-    it('returns FILE_TYPE_UNSUPPORTED for .csv and .xlsx until C9/C10', () => {
-      const resCsv = registry.parse(Buffer.from(''), 'test.csv');
-      expect(resCsv.ok).toBe(false);
-      if (!resCsv.ok) {
-        expect(resCsv.errors[0].code).toBe('FILE_TYPE_UNSUPPORTED');
-      }
-
+    it('returns FILE_TYPE_UNSUPPORTED for .xlsx until C10', () => {
       const resXlsx = registry.parse(Buffer.from(''), 'test.XLSX');
       expect(resXlsx.ok).toBe(false);
       if (!resXlsx.ok) {
