@@ -98,3 +98,25 @@ export {
   RestoreThemeUseCase,
   type RestoreThemeCommand,
 } from './application/use-cases/themes/restore-theme.use-case';
+
+// Domain Services & Import Planner
+export {
+  ImportPlan,
+  type ImportPlanSummary,
+  type PlanAction,
+  type PlanSeriesItem,
+  type PlanBookItem,
+  type PlanThemeItem,
+  type PlanSongItem,
+  type PlanError,
+  type ArchivedItemRef,
+  type ParsedLibraryFile,
+  type ParsedBook,
+  type ParsedSong,
+  type SourceRef,
+} from './domain/services/import-plan';
+export {
+  ImportPlanner,
+  validateParsedFile,
+  type CatalogSnapshot,
+} from './domain/services/import-planner';
