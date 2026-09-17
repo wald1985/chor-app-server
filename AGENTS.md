@@ -62,6 +62,18 @@ email/Swagger/auth):
   capability spec that needs it (user invites are a likely candidate).
 - **API docs:** `@nestjs/swagger`, decorating only `interface/`-layer DTOs
   (never domain entities). Exact docs route/auth: TBD at scaffolding.
+- **Modular monolith boundaries** (ADR 0008, 2026-09-17): every
+  bounded-context module is a **top-level** module registered directly in
+  `AppModule` — never wired in only as another feature module's import.
+  Cross-module access happens **only** through what a module's
+  `*.module.ts` explicitly `exports` (a guard, decorator, use case, port);
+  never a deep relative import reaching into another module's
+  `domain/`/`application/`/`infrastructure/`. Fixed (2026-09-17):
+  `NotificationsModule` is registered in `AppModule`, its public API is
+  exported via `src/notifications/index.ts`, `ForgotPasswordUseCase`
+  imports from the notifications barrel, and an ESLint rule
+  (`no-restricted-imports`) enforces cross-module boundaries. Check every
+  new module (People next) against this before merging.
 
 Package manager, lint/test setup, exact bounded-context boundaries: still
 **not decided** as of 2026-09-15 — check `package.json`, `prisma/`, and

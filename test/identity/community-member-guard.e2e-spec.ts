@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { EMAIL_SENDER } from '../../src/notifications/domain/ports/email-sender.port';
+import { EMAIL_SENDER } from '../../src/notifications';
 import { PrismaService } from '../../src/shared/prisma/prisma.service';
 import { createAdmin } from '../utils/factories';
 import { resetDb } from '../utils/reset-db';

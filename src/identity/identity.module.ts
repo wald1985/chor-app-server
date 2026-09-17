@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsModule } from '../notifications';
 
 import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
 import { ForgotPasswordUseCase } from './application/use-cases/forgot-password.use-case';

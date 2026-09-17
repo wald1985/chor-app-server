@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import { AppModule } from '../../src/app.module';
-import { EMAIL_SENDER } from '../../src/notifications/domain/ports/email-sender.port';
+import { EMAIL_SENDER } from '../../src/notifications';
 
 export interface TestAppResult {
   app: INestApplication;

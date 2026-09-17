@@ -4,6 +4,43 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+const moduleBoundaries = [
+  {
+    name: 'identity',
+    patterns: [
+      '**/identity/domain',
+      '**/identity/domain/**',
+      '**/identity/application',
+      '**/identity/application/**',
+      '**/identity/infrastructure',
+      '**/identity/infrastructure/**',
+    ],
+    errorMessage:
+      'Do not reach into identity internals directly. Import from identity root/barrel.',
+  },
+  {
+    name: 'notifications',
+    patterns: [
+      '**/notifications/domain',
+      '**/notifications/domain/**',
+      '**/notifications/application',
+      '**/notifications/application/**',
+      '**/notifications/infrastructure',
+      '**/notifications/infrastructure/**',
+    ],
+    errorMessage:
+      'Do not reach into notifications internals directly. Import from notifications root/barrel.',
+  },
+];
+
+const getForbiddenPatternsFor = (excludeModuleName) =>
+  moduleBoundaries
+    .filter((m) => m.name !== excludeModuleName)
+    .map((m) => ({
+      group: m.patterns,
+      message: m.errorMessage,
+    }));
+
 export default tseslint.config(
   {
     ignores: ['eslint.config.mjs', 'dist/**', 'node_modules/**'],
@@ -57,6 +94,30 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/**/*.ts'],
+    ignores: moduleBoundaries.map((m) => `src/${m.name}/**`),
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: getForbiddenPatternsFor(null),
+        },
+      ],
+    },
+  },
+  ...moduleBoundaries.map((b) => ({
+    files: [`src/${b.name}/**/*.ts`],
+    ignores: [`src/${b.name}/domain/**`, `src/${b.name}/interface/**`],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: getForbiddenPatternsFor(b.name),
+        },
+      ],
+    },
+  })),
+  {
     files: ['src/**/domain/**/*.ts'],
     rules: {
       'no-restricted-imports': [
@@ -67,6 +128,10 @@ export default tseslint.config(
               group: ['@nestjs', '@nestjs/*', '@prisma', '@prisma/*'],
               message: 'Domain layer must not depend on NestJS or Prisma.',
             },
+            ...moduleBoundaries.map((m) => ({
+              group: m.patterns,
+              message: m.errorMessage,
+            })),
           ],
         },
       ],
@@ -83,6 +148,10 @@ export default tseslint.config(
               group: ['@prisma', '@prisma/*'],
               message: 'Interface layer must not depend on Prisma.',
             },
+            ...moduleBoundaries.map((m) => ({
+              group: m.patterns,
+              message: m.errorMessage,
+            })),
           ],
         },
       ],

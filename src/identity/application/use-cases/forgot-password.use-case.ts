@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { EmailSender } from '../../../notifications/domain/ports/email-sender.port';
-import { EMAIL_SENDER } from '../../../notifications/domain/ports/email-sender.port';
+import type { EmailSender } from '../../../notifications';
+import { EMAIL_SENDER } from '../../../notifications';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../../domain/ports/password-reset-token-repository.port';
 import type { PasswordResetTokenRepository } from '../../domain/ports/password-reset-token-repository.port';
 import { RESET_TOKEN_GENERATOR } from '../../domain/ports/reset-token-generator.port';
