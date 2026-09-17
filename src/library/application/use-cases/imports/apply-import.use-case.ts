@@ -93,7 +93,7 @@ export class ApplyImportUseCase {
 
   async execute(command: ApplyImportCommand): Promise<ApplyImportResult> {
     return this.uow.run(async () => {
-      const parseResult = this.parserRegistry.parse(
+      const parseResult = await this.parserRegistry.parse(
         command.buffer,
         command.filename,
       );

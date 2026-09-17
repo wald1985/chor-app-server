@@ -57,7 +57,7 @@ export class PreviewImportUseCase {
   ) {}
 
   async execute(command: PreviewImportCommand): Promise<PreviewImportResult> {
-    const parseResult = this.parserRegistry.parse(
+    const parseResult = await this.parserRegistry.parse(
       command.buffer,
       command.filename,
     );

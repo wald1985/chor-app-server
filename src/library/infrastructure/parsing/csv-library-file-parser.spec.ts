@@ -3,6 +3,7 @@ import {
   detectDelimiter,
 } from './csv-library-file-parser';
 import { JsonLibraryFileParser } from './json-library-file-parser';
+import { XlsxLibraryFileParser } from './xlsx-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from './library-file-parser-registry';
 import {
   CatalogSnapshot,
@@ -13,7 +14,12 @@ import {
 describe('CsvLibraryFileParser & CSV Import (Phase C9)', () => {
   const jsonParser = new JsonLibraryFileParser();
   const csvParser = new CsvLibraryFileParser();
-  const registry = new DefaultLibraryFileParserRegistry(jsonParser, csvParser);
+  const xlsxParser = new XlsxLibraryFileParser();
+  const registry = new DefaultLibraryFileParserRegistry(
+    jsonParser,
+    csvParser,
+    xlsxParser,
+  );
 
   describe('detectDelimiter', () => {
     it('detects comma delimiter by default', () => {
@@ -188,9 +194,9 @@ describe('CsvLibraryFileParser & CSV Import (Phase C9)', () => {
   });
 
   describe('DefaultLibraryFileParserRegistry with CSV', () => {
-    it('delegates .csv files to CsvLibraryFileParser', () => {
+    it('delegates .csv files to CsvLibraryFileParser', async () => {
       const csv = 'book,number,title\nBuch 1,1,Title\n';
-      const res = registry.parse(Buffer.from(csv), 'catalog.csv');
+      const res = await registry.parse(Buffer.from(csv), 'catalog.csv');
       expect(res.ok).toBe(true);
       if (res.ok) {
         expect(res.format).toBe('CSV');

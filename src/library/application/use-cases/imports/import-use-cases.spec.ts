@@ -1,6 +1,8 @@
 import { PreviewImportUseCase } from './preview-import.use-case';
 import { ApplyImportUseCase } from './apply-import.use-case';
 import { JsonLibraryFileParser } from '../../../infrastructure/parsing/json-library-file-parser';
+import { CsvLibraryFileParser } from '../../../infrastructure/parsing/csv-library-file-parser';
+import { XlsxLibraryFileParser } from '../../../infrastructure/parsing/xlsx-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from '../../../infrastructure/parsing/library-file-parser-registry';
 import {
   LibraryFileInvalidError,
@@ -242,6 +244,8 @@ describe('Import Use Cases (Phase C7)', () => {
     songRepo = new InMemorySongRepo();
     parserRegistry = new DefaultLibraryFileParserRegistry(
       new JsonLibraryFileParser(),
+      new CsvLibraryFileParser(),
+      new XlsxLibraryFileParser(),
     );
     const uow = new DirectUnitOfWork();
     const idGen = new FakeIdGenerator();

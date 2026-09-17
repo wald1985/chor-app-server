@@ -6,11 +6,11 @@ export type ParseResult =
 
 export interface LibraryFileParser {
   supports(filename: string): boolean;
-  parse(buffer: Buffer, filename: string): ParseResult;
+  parse(buffer: Buffer, filename: string): Promise<ParseResult> | ParseResult;
 }
 
 export interface LibraryFileParserRegistry {
-  parse(buffer: Buffer, filename: string): ParseResult;
+  parse(buffer: Buffer, filename: string): Promise<ParseResult> | ParseResult;
 }
 
 export const LIBRARY_FILE_PARSER_REGISTRY = Symbol(

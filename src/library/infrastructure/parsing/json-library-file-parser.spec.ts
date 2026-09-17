@@ -1,11 +1,17 @@
 import { JsonLibraryFileParser } from './json-library-file-parser';
 import { CsvLibraryFileParser } from './csv-library-file-parser';
+import { XlsxLibraryFileParser } from './xlsx-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from './library-file-parser-registry';
 
 describe('JsonLibraryFileParser & DefaultLibraryFileParserRegistry (Phase C7)', () => {
   const parser = new JsonLibraryFileParser();
   const csvParser = new CsvLibraryFileParser();
-  const registry = new DefaultLibraryFileParserRegistry(parser, csvParser);
+  const xlsxParser = new XlsxLibraryFileParser();
+  const registry = new DefaultLibraryFileParserRegistry(
+    parser,
+    csvParser,
+    xlsxParser,
+  );
 
   describe('JsonLibraryFileParser', () => {
     it('parses valid JSON library file successfully', () => {
@@ -152,24 +158,30 @@ describe('JsonLibraryFileParser & DefaultLibraryFileParserRegistry (Phase C7)', 
   });
 
   describe('DefaultLibraryFileParserRegistry', () => {
-    it('dispatches .json to JsonLibraryFileParser', () => {
+    it('dispatches .json to JsonLibraryFileParser', async () => {
       const buffer = Buffer.from(
         JSON.stringify({ format: 'chor-app-library/v1', books: [] }),
       );
-      const res = registry.parse(buffer, 'catalog.JSON');
+      const res = await registry.parse(buffer, 'catalog.JSON');
       expect(res.ok).toBe(true);
     });
 
-    it('returns FILE_TYPE_UNSUPPORTED for .xlsx until C10', () => {
-      const resXlsx = registry.parse(Buffer.from(''), 'test.XLSX');
-      expect(resXlsx.ok).toBe(false);
-      if (!resXlsx.ok) {
-        expect(resXlsx.errors[0].code).toBe('FILE_TYPE_UNSUPPORTED');
+    it('returns FILE_TYPE_UNSUPPORTED for .xls and .xlsm', async () => {
+      const resXls = await registry.parse(Buffer.from(''), 'test.xls');
+      expect(resXls.ok).toBe(false);
+      if (!resXls.ok) {
+        expect(resXls.errors[0].code).toBe('FILE_TYPE_UNSUPPORTED');
+      }
+
+      const resXlsm = await registry.parse(Buffer.from(''), 'test.xlsm');
+      expect(resXlsm.ok).toBe(false);
+      if (!resXlsm.ok) {
+        expect(resXlsm.errors[0].code).toBe('FILE_TYPE_UNSUPPORTED');
       }
     });
 
-    it('returns FILE_TYPE_UNSUPPORTED for unknown extensions', () => {
-      const res = registry.parse(Buffer.from(''), 'data.txt');
+    it('returns FILE_TYPE_UNSUPPORTED for unknown extensions', async () => {
+      const res = await registry.parse(Buffer.from(''), 'data.txt');
       expect(res.ok).toBe(false);
       if (!res.ok) {
         expect(res.errors[0].code).toBe('FILE_TYPE_UNSUPPORTED');
