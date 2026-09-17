@@ -135,6 +135,18 @@ model LibraryTheme {
   @@map("library_themes")
 }
 
+model Superadmin {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  tokenVersion Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("superadmins")
+}
+
 model LibrarySongTheme {
   songId  String
   themeId String

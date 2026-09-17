@@ -61,6 +61,21 @@ const moduleBoundaries = [
     errorMessage:
       'Do not reach into library-admin internals directly. Import from library-admin root/barrel.',
   },
+  {
+    name: 'superadmin',
+    patterns: [
+      '**/superadmin/domain',
+      '**/superadmin/domain/**',
+      '**/superadmin/application',
+      '**/superadmin/application/**',
+      '**/superadmin/infrastructure',
+      '**/superadmin/infrastructure/**',
+      '**/superadmin/interface',
+      '**/superadmin/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into superadmin internals directly. Import from superadmin root/barrel.',
+  },
 ];
 
 const getForbiddenPatternsFor = (excludeModuleName) =>

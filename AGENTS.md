@@ -110,6 +110,38 @@ Russian text use the English names from the glossary (e.g. `Person`,
   `prisma.config.ts` — Prisma 7 reads the connection string from
   `prisma.config.ts`/`@prisma/adapter-pg`, not from `schema.prisma`'s
   `datasource` block).
+- **Catalog** (`src/library/`, `src/library-admin/`): global, non-tenant
+  catalog of book series/books/songs/themes. Read API under `/library/...`,
+  editing + CSV/XLSX/JSON upload (preview/apply) under `/admin/library/...`.
+  Design/plan: `docs/feature/catalog/CATALOG_DESIGN.md`,
+  `CATALOG_PLANNING.md`. `/admin/library` is guarded by
+  `SuperadminAuthGuard` (see below); before Superadmin existed it ran behind
+  a permissive stub — that stub is gone (S8, 2026-09-17).
+- **Superadmin** (`src/superadmin/`): a separate platform-admin identity
+  with its own login, distinct from `User`/Community. Design/plan:
+  `docs/feature/superadmin/SUPERADMIN_DESIGN.md`, `SUPERADMIN_PLANNING.md`.
+  - `POST /admin/auth/login`, `GET/PATCH /admin/me`,
+    `POST /admin/me/change-password`, full CRUD on other superadmins under
+    `/admin/superadmins`. All superadmins are equal (no permission model);
+    a superadmin can't delete themselves, and the last remaining superadmin
+    can't be deleted.
+  - Token type is carried in the JWT `aud` claim
+    (`chor-app-superadmin`, same `JWT_SECRET`/`JWT_EXPIRES_IN` as user
+    tokens — no new env vars): a superadmin token is rejected on `/auth/*`
+    and Community routes, and a user token is rejected on `/admin/me` and
+    `/admin/superadmins`. `GET /library/...` accepts either;
+    `/admin/library/...` accepts only a superadmin token.
+  - **Creating the first superadmin / resetting a lost password** (no
+    self-registration — do this on the host):
+    ```bash
+    docker compose run --rm -T server node dist/superadmin/interface/cli/seed-superadmin.js \
+      --email <email> --name "<name>"
+    docker compose run --rm -T server node dist/superadmin/interface/cli/seed-superadmin.js \
+      --email <email> --reset-password
+    ```
+    Prints a generated password once to stdout — save it in a password
+    manager immediately; it is never stored anywhere and never shown again.
+    Do not paste it into files, commit messages, or chat.
 
 ## Deployment & CI/CD
 **Working and deployed.** Full description + known issues:
