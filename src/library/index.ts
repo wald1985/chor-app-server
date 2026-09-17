@@ -8,3 +8,83 @@ export {
   type LibraryThemeRef,
 } from './application/reader/library-reader';
 export { toLibraryHttpException } from './interface/http/library-error-mapper';
+
+// Series Use Cases
+export {
+  CreateSeriesUseCase,
+  type CreateSeriesCommand,
+} from './application/use-cases/series/create-series.use-case';
+export {
+  RenameSeriesUseCase,
+  type RenameSeriesCommand,
+} from './application/use-cases/series/rename-series.use-case';
+export {
+  ArchiveSeriesUseCase,
+  type ArchiveSeriesCommand,
+} from './application/use-cases/series/archive-series.use-case';
+export {
+  RestoreSeriesUseCase,
+  type RestoreSeriesCommand,
+} from './application/use-cases/series/restore-series.use-case';
+
+// Book Use Cases
+export {
+  CreateBookUseCase,
+  type CreateBookCommand,
+} from './application/use-cases/books/create-book.use-case';
+export {
+  UpdateBookUseCase,
+  type UpdateBookCommand,
+} from './application/use-cases/books/update-book.use-case';
+export {
+  PlaceBookUseCase,
+  type PlaceBookCommand,
+} from './application/use-cases/books/place-book.use-case';
+export {
+  ArchiveBookUseCase,
+  type ArchiveBookCommand,
+} from './application/use-cases/books/archive-book.use-case';
+export {
+  RestoreBookUseCase,
+  type RestoreBookCommand,
+} from './application/use-cases/books/restore-book.use-case';
+
+// Song Use Cases
+export {
+  CreateSongUseCase,
+  type CreateSongCommand,
+} from './application/use-cases/songs/create-song.use-case';
+export {
+  UpdateSongUseCase,
+  type UpdateSongCommand,
+} from './application/use-cases/songs/update-song.use-case';
+export {
+  SetSongThemesUseCase,
+  type SetSongThemesCommand,
+} from './application/use-cases/songs/set-song-themes.use-case';
+export {
+  ArchiveSongUseCase,
+  type ArchiveSongCommand,
+} from './application/use-cases/songs/archive-song.use-case';
+export {
+  RestoreSongUseCase,
+  type RestoreSongCommand,
+} from './application/use-cases/songs/restore-song.use-case';
+
+// Theme Use Cases
+export {
+  CreateThemeUseCase,
+  type CreateThemeCommand,
+} from './application/use-cases/themes/create-theme.use-case';
+export {
+  RenameThemeUseCase,
+  type RenameThemeCommand,
+} from './application/use-cases/themes/rename-theme.use-case';
+export {
+  ArchiveThemeUseCase,
+  type ArchiveThemeCommand,
+} from './application/use-cases/themes/archive-theme.use-case';
+export {
+  RestoreThemeUseCase,
+  type RestoreThemeCommand,
+} from './application/use-cases/themes/restore-theme.use-case';
