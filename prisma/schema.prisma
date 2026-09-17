@@ -69,3 +69,80 @@ model CommunityMembership {
   @@unique([userId, communityId])
   @@map("community_memberships")
 }
+
+model LibrarySeries {
+  id         String    @id @default(uuid())
+  title      String
+  titleKey   String    @unique
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  books LibraryBook[]
+
+  @@map("library_series")
+}
+
+model LibraryBook {
+  id         String    @id @default(uuid())
+  title      String
+  titleKey   String    @unique
+  volume     Int?
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  seriesId String?
+  series   LibrarySeries? @relation(fields: [seriesId], references: [id], onDelete: Restrict)
+  songs    LibrarySong[]
+
+  @@unique([seriesId, volume])
+  @@map("library_books")
+}
+
+model LibrarySong {
+  id            String    @id @default(uuid())
+  numberScopeId String
+  number        String
+  numberKey     String
+  sortKey       String
+  title         String
+  author        String?
+  arranger      String?
+  archivedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bookId String
+  book   LibraryBook        @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  themes LibrarySongTheme[]
+
+  @@unique([numberScopeId, numberKey])
+  @@index([bookId, archivedAt, sortKey])
+  @@map("library_songs")
+}
+
+model LibraryTheme {
+  id         String    @id @default(uuid())
+  name       String
+  nameKey    String    @unique
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  songs LibrarySongTheme[]
+
+  @@map("library_themes")
+}
+
+model LibrarySongTheme {
+  songId  String
+  themeId String
+  song    LibrarySong  @relation(fields: [songId], references: [id], onDelete: Restrict)
+  theme   LibraryTheme @relation(fields: [themeId], references: [id], onDelete: Restrict)
+
+  @@id([songId, themeId])
+  @@index([themeId])
+  @@map("library_song_themes")
+}
+
