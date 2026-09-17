@@ -8,6 +8,16 @@ export {
   type LibraryThemeRef,
 } from './application/reader/library-reader';
 export { toLibraryHttpException } from './interface/http/library-error-mapper';
+export { LibraryItemInUseError } from './domain/errors/library.errors';
+export { GetSongQuery } from './application/queries/get-song.query';
+export { GetBookQuery } from './application/queries/get-book.query';
+export type {
+  SeriesView,
+  BookSummaryView,
+  BookView,
+  SongView,
+  ThemeView,
+} from './application/views/library.views';
 
 // Series Use Cases
 export {

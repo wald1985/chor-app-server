@@ -12,17 +12,26 @@ export interface TestAppResult {
   };
 }
 
-export async function createTestApp(): Promise<TestAppResult> {
+import { TestingModuleBuilder } from '@nestjs/testing';
+
+export async function createTestApp(
+  customize?: (builder: TestingModuleBuilder) => TestingModuleBuilder,
+): Promise<TestAppResult> {
   const fakeEmailSender = {
     send: jest.fn().mockResolvedValue(undefined),
   };
 
-  const moduleFixture: TestingModule = await Test.createTestingModule({
+  let builder = Test.createTestingModule({
     imports: [AppModule],
   })
     .overrideProvider(EMAIL_SENDER)
-    .useValue(fakeEmailSender)
-    .compile();
+    .useValue(fakeEmailSender);
+
+  if (customize) {
+    builder = customize(builder);
+  }
+
+  const moduleFixture: TestingModule = await builder.compile();
 
   const app = moduleFixture.createNestApplication();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));

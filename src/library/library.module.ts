@@ -96,6 +96,6 @@ const USE_CASES = [
     { provide: LIBRARY_READER, useClass: DefaultLibraryReader },
     ...USE_CASES,
   ],
-  exports: [LIBRARY_READER, ...USE_CASES],
+  exports: [LIBRARY_READER, GetSongQuery, GetBookQuery, ...USE_CASES],
 })
 export class LibraryModule {}
