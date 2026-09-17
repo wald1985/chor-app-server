@@ -31,6 +31,36 @@ const moduleBoundaries = [
     errorMessage:
       'Do not reach into notifications internals directly. Import from notifications root/barrel.',
   },
+  {
+    name: 'library',
+    patterns: [
+      '**/library/domain',
+      '**/library/domain/**',
+      '**/library/application',
+      '**/library/application/**',
+      '**/library/infrastructure',
+      '**/library/infrastructure/**',
+      '**/library/interface',
+      '**/library/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into library internals directly. Import from library root/barrel.',
+  },
+  {
+    name: 'library-admin',
+    patterns: [
+      '**/library-admin/domain',
+      '**/library-admin/domain/**',
+      '**/library-admin/application',
+      '**/library-admin/application/**',
+      '**/library-admin/infrastructure',
+      '**/library-admin/infrastructure/**',
+      '**/library-admin/interface',
+      '**/library-admin/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into library-admin internals directly. Import from library-admin root/barrel.',
+  },
 ];
 
 const getForbiddenPatternsFor = (excludeModuleName) =>
