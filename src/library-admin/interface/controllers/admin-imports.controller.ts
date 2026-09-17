@@ -29,8 +29,7 @@ import type {
   LibraryItemUsage,
   LibraryUsageProvider,
 } from '../../application/ports/library-usage-provider.port';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
-import { SuperAdminGuard } from '../guards/super-admin.guard';
+import { SuperadminAuthGuard } from '../../../superadmin';
 import { ApplyImportDto } from '../dto/apply-import.dto';
 import { AdminImportExceptionFilter } from '../http/admin-import-exception.filter';
 import type {
@@ -44,7 +43,7 @@ import type {
 } from '../views/import.views';
 
 @Controller('admin/library/imports')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
+@UseGuards(SuperadminAuthGuard)
 @UseFilters(AdminImportExceptionFilter)
 export class AdminImportsController {
   private readonly logger = new Logger(AdminImportsController.name);

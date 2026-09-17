@@ -12,8 +12,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
 import { RestoreSongUseCase, SongView } from '../../../library';
+import { SuperadminAuthGuard } from '../../../superadmin';
 import { ArchiveWithUsageCheck } from '../../application/archive-with-usage-check';
 import { SongAdminService } from '../../application/song-admin.service';
 import {
@@ -22,11 +22,10 @@ import {
   PatchSongDto,
   SetSongThemesDto,
 } from '../dto/admin-songs.dto';
-import { SuperAdminGuard } from '../guards/super-admin.guard';
 import { toLibraryAdminHttpException } from '../http/library-admin-error-mapper';
 
 @Controller('admin/library')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
+@UseGuards(SuperadminAuthGuard)
 export class AdminSongsController {
   constructor(
     private readonly songAdminService: SongAdminService,

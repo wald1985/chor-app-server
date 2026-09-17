@@ -10,24 +10,23 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
 import {
   CreateThemeUseCase,
   RenameThemeUseCase,
   RestoreThemeUseCase,
   ThemeView,
 } from '../../../library';
+import { SuperadminAuthGuard } from '../../../superadmin';
 import { ArchiveWithUsageCheck } from '../../application/archive-with-usage-check';
 import {
   ArchiveThemeQueryDto,
   CreateThemeDto,
   PatchThemeDto,
 } from '../dto/admin-themes.dto';
-import { SuperAdminGuard } from '../guards/super-admin.guard';
 import { toLibraryAdminHttpException } from '../http/library-admin-error-mapper';
 
 @Controller('admin/library/themes')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
+@UseGuards(SuperadminAuthGuard)
 export class AdminThemesController {
   constructor(
     private readonly createThemeUseCase: CreateThemeUseCase,

@@ -1,7 +1,14 @@
 # Catalog — дизайн (фаза 2)
 
 **Дата:** 2026-09-17
-**Статус:** черновик на ревью (гейт качества 1 по `../chor-app-docs/development-process.md`)
+**Статус:** реализован; см. `CATALOG_PLANNING.md` «Статус».
+**Ревизия (2026-09-17, стыковка с Superadmin, `SUPERADMIN_PLANNING.md` S8):** guard-заглушка `SuperAdminGuard`
+(§5, §9.3, §12.1, D3, OQ-3 ниже) удалена. `/admin/library/...` теперь под `SuperadminAuthGuard`,
+`GET /library/...` — под `UserOrSuperadminAuthGuard` (токен пользователя или superadmin'а); токен пользователя
+на `/admin/library` теперь даёт 401, а не 2xx. `LibraryModule` и `LibraryAdminModule` импортируют
+`SuperadminModule` вместо `IdentityModule` напрямую. Подробности: ADR 0011 «Superadmin identity and session»
+и `../superadmin/SUPERADMIN_DESIGN.md` §9.4, §14.1. Текст §5, §9.3, §9.4, §12.1 и решение D3 ниже описывают
+состояние *до* этой ревизии и оставлены как есть для истории.
 **Входные данные:**
 - `CATALOG_RESEARCH.md` — факты о текущем коде (ссылки «CR§…»);
 - `chor-app-docs/decisions/0010-public-book-library.md` — решения по каталогу (ссылки «ADR10§…»);

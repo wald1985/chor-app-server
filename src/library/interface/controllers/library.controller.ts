@@ -7,7 +7,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
+import { UserOrSuperadminAuthGuard } from '../../../superadmin';
 import { GetBookQuery } from '../../application/queries/get-book.query';
 import { GetSongQuery } from '../../application/queries/get-song.query';
 import { ListBooksQuery } from '../../application/queries/list-books.query';
@@ -24,7 +24,7 @@ import {
 import { toLibraryHttpException } from '../http/library-error-mapper';
 
 @Controller('library')
-@UseGuards(JwtAuthGuard)
+@UseGuards(UserOrSuperadminAuthGuard)
 export class LibraryController {
   // eslint-disable-next-line max-params -- LibraryController injects 6 query handlers
   constructor(

@@ -1,7 +1,8 @@
 # Catalog — план реализации (фаза 3)
 
 **Дата:** 2026-09-17
-**Статус:** черновик на ревью (гейт качества 2 по `../chor-app-docs/development-process.md`)
+**Статус:** выполнен (фазы C0–C12). Заглушка `SuperAdminGuard` заменена в `SUPERADMIN_PLANNING.md` фаза S8,
+2026-09-17 — см. `../superadmin/SUPERADMIN_PLANNING.md` и ревизию в `CATALOG_DESIGN.md`.
 **Входные данные:** `CATALOG_RESEARCH.md` (CR§…), `CATALOG_DESIGN.md` (D§… — разделы, D1…D16 — решения, OQ-… — открытые вопросы),
 `chor-app-docs/decisions/0010-public-book-library.md`.
 

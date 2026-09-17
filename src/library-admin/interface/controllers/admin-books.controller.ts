@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
+import { SuperadminAuthGuard } from '../../../superadmin';
 import {
   BookSummaryView,
   CreateBookUseCase,
@@ -25,11 +25,10 @@ import {
   CreateBookDto,
   PatchBookDto,
 } from '../dto/admin-books.dto';
-import { SuperAdminGuard } from '../guards/super-admin.guard';
 import { toLibraryAdminHttpException } from '../http/library-admin-error-mapper';
 
 @Controller('admin/library/books')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
+@UseGuards(SuperadminAuthGuard)
 export class AdminBooksController {
   constructor(
     private readonly createBookUseCase: CreateBookUseCase,

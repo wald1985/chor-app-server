@@ -11,6 +11,7 @@ import {
 import { PrismaService } from '../../src/shared/prisma/prisma.service';
 import { createTestApp } from '../utils/create-test-app';
 import { resetDb } from '../utils/reset-db';
+import { createSuperadmin } from '../utils/superadmin-factories';
 
 describe('Library JSON Import preview and apply (e2e - Phase C7)', () => {
   let app: INestApplication;
@@ -26,25 +27,10 @@ describe('Library JSON Import preview and apply (e2e - Phase C7)', () => {
   beforeEach(async () => {
     await resetDb(prisma);
 
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'admin@example.com',
-        password: 'Password123!',
-        name: 'Admin User',
-        communityName: 'Admin Choir',
-      })
-      .expect(201);
-
-    const loginRes = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'admin@example.com',
-        password: 'Password123!',
-      })
-      .expect(200);
-
-    jwtToken = loginRes.body.accessToken;
+    // /admin/library requires a superadmin token as of S8 (ADR 0011); it no
+    // longer accepts any authenticated user's token.
+    const superadmin = await createSuperadmin(app);
+    jwtToken = superadmin.token;
   });
 
   const baseCatalogJson = {
@@ -408,25 +394,8 @@ describe('Library JSON Import preview and apply (e2e - Phase C7)', () => {
       const p = appWithMockUsage.get(PrismaService);
       await resetDb(p);
 
-      await request(appWithMockUsage.getHttpServer())
-        .post('/auth/register')
-        .send({
-          email: 'inuse@example.com',
-          password: 'Password123!',
-          name: 'InUse User',
-          communityName: 'InUse Choir',
-        })
-        .expect(201);
-
-      const loginRes = await request(appWithMockUsage.getHttpServer())
-        .post('/auth/login')
-        .send({
-          email: 'inuse@example.com',
-          password: 'Password123!',
-        })
-        .expect(200);
-
-      inUseJwtToken = loginRes.body.accessToken;
+      const superadmin = await createSuperadmin(appWithMockUsage);
+      inUseJwtToken = superadmin.token;
     });
 
     it('returns 409 LIBRARY_ITEM_IN_USE when archiving songs in use without confirmInUse, succeeds with confirmInUse=true', async () => {

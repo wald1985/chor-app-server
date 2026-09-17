@@ -9,7 +9,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard';
 import {
   ArchiveSeriesUseCase,
   CreateSeriesUseCase,
@@ -17,12 +16,12 @@ import {
   RestoreSeriesUseCase,
   SeriesView,
 } from '../../../library';
+import { SuperadminAuthGuard } from '../../../superadmin';
 import { CreateSeriesDto, PatchSeriesDto } from '../dto/admin-series.dto';
-import { SuperAdminGuard } from '../guards/super-admin.guard';
 import { toLibraryAdminHttpException } from '../http/library-admin-error-mapper';
 
 @Controller('admin/library/series')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
+@UseGuards(SuperadminAuthGuard)
 export class AdminSeriesController {
   constructor(
     private readonly createSeriesUseCase: CreateSeriesUseCase,

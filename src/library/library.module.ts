@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { IdentityModule } from '../identity/identity.module';
 import { PrismaModule } from '../shared/prisma/prisma.module';
+import { SuperadminModule } from '../superadmin';
 import { GetBookQuery } from './application/queries/get-book.query';
 import { GetSongQuery } from './application/queries/get-song.query';
 import { ListBooksQuery } from './application/queries/list-books.query';
@@ -78,7 +78,7 @@ const USE_CASES = [
 ];
 
 @Module({
-  imports: [IdentityModule, PrismaModule],
+  imports: [SuperadminModule, PrismaModule],
   controllers: [LibraryController],
   providers: [
     PrismaTransactionContext,

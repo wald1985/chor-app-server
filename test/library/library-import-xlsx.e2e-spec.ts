@@ -4,6 +4,7 @@ import writeXlsxFile from 'write-excel-file/node';
 import { PrismaService } from '../../src/shared/prisma/prisma.service';
 import { createTestApp } from '../utils/create-test-app';
 import { resetDb } from '../utils/reset-db';
+import { createSuperadmin } from '../utils/superadmin-factories';
 
 describe('Library XLSX Import preview and apply (e2e - Phase C10)', () => {
   let app: INestApplication;
@@ -19,25 +20,10 @@ describe('Library XLSX Import preview and apply (e2e - Phase C10)', () => {
   beforeEach(async () => {
     await resetDb(prisma);
 
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        email: 'admin@example.com',
-        password: 'Password123!',
-        name: 'Admin User',
-        communityName: 'Admin Choir',
-      })
-      .expect(201);
-
-    const loginRes = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: 'admin@example.com',
-        password: 'Password123!',
-      })
-      .expect(200);
-
-    jwtToken = loginRes.body.accessToken;
+    // /admin/library requires a superadmin token as of S8 (ADR 0011); it no
+    // longer accepts any authenticated user's token.
+    const superadmin = await createSuperadmin(app);
+    jwtToken = superadmin.token;
   });
 
   const baseCatalogJson = {
