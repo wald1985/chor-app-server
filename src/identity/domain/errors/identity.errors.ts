@@ -39,3 +39,14 @@ export class NotCommunityMemberError extends Error {
     this.name = 'NotCommunityMemberError';
   }
 }
+
+export class MembershipNotFoundError extends Error {
+  constructor(membershipId?: string) {
+    super(
+      membershipId
+        ? `Membership not found: ${membershipId}`
+        : 'Membership not found',
+    );
+    this.name = 'MembershipNotFoundError';
+  }
+}
