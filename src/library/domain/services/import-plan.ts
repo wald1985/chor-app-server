@@ -168,7 +168,7 @@ export class ImportPlan {
       errors: this.errors,
     };
     const json = canonicalStringify(canonicalPayload);
-    return createHash('sha256').update(json).digest('hex');
+    return `sha256:${createHash('sha256').update(json).digest('hex')}`;
   }
 
   private count<T extends { action: string }>(

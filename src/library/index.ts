@@ -8,7 +8,10 @@ export {
   type LibraryThemeRef,
 } from './application/reader/library-reader';
 export { toLibraryHttpException } from './interface/http/library-error-mapper';
-export { LibraryItemInUseError } from './domain/errors/library.errors';
+export {
+  LibraryItemInUseError,
+  LibraryImportPlanChangedError,
+} from './domain/errors/library.errors';
 export { GetSongQuery } from './application/queries/get-song.query';
 export { GetBookQuery } from './application/queries/get-book.query';
 export type {
@@ -120,3 +123,21 @@ export {
   validateParsedFile,
   type CatalogSnapshot,
 } from './domain/services/import-planner';
+
+// Import Ports & Use Cases
+export {
+  LIBRARY_FILE_PARSER_REGISTRY,
+  type LibraryFileParserRegistry,
+  type LibraryFileParser,
+  type ParseResult,
+} from './domain/ports/library-file-parser.port';
+export {
+  PreviewImportUseCase,
+  type PreviewImportCommand,
+  type PreviewImportResult,
+} from './application/use-cases/imports/preview-import.use-case';
+export {
+  ApplyImportUseCase,
+  type ApplyImportCommand,
+  type ApplyImportResult,
+} from './application/use-cases/imports/apply-import.use-case';

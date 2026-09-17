@@ -46,6 +46,12 @@ import { PrismaTransactionContext } from './infrastructure/prisma/prisma-transac
 import { SystemClock } from './infrastructure/system-clock';
 import { LibraryController } from './interface/controllers/library.controller';
 
+import { LIBRARY_FILE_PARSER_REGISTRY } from './domain/ports/library-file-parser.port';
+import { JsonLibraryFileParser } from './infrastructure/parsing/json-library-file-parser';
+import { DefaultLibraryFileParserRegistry } from './infrastructure/parsing/library-file-parser-registry';
+import { PreviewImportUseCase } from './application/use-cases/imports/preview-import.use-case';
+import { ApplyImportUseCase } from './application/use-cases/imports/apply-import.use-case';
+
 const USE_CASES = [
   CreateSeriesUseCase,
   RenameSeriesUseCase,
@@ -65,6 +71,8 @@ const USE_CASES = [
   RenameThemeUseCase,
   ArchiveThemeUseCase,
   RestoreThemeUseCase,
+  PreviewImportUseCase,
+  ApplyImportUseCase,
 ];
 
 @Module({
@@ -86,6 +94,12 @@ const USE_CASES = [
     { provide: LIBRARY_UNIT_OF_WORK, useClass: PrismaLibraryUnitOfWork },
     { provide: ID_GENERATOR, useClass: CryptoIdGenerator },
     { provide: CLOCK, useClass: SystemClock },
+    JsonLibraryFileParser,
+    DefaultLibraryFileParserRegistry,
+    {
+      provide: LIBRARY_FILE_PARSER_REGISTRY,
+      useClass: DefaultLibraryFileParserRegistry,
+    },
     ListSeriesQuery,
     ListBooksQuery,
     GetBookQuery,
@@ -96,6 +110,12 @@ const USE_CASES = [
     { provide: LIBRARY_READER, useClass: DefaultLibraryReader },
     ...USE_CASES,
   ],
-  exports: [LIBRARY_READER, GetSongQuery, GetBookQuery, ...USE_CASES],
+  exports: [
+    LIBRARY_READER,
+    GetSongQuery,
+    GetBookQuery,
+    LIBRARY_FILE_PARSER_REGISTRY,
+    ...USE_CASES,
+  ],
 })
 export class LibraryModule {}

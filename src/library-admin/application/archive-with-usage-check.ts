@@ -36,6 +36,24 @@ export class ArchiveWithUsageCheck {
     await this.archiveThemeUseCase.execute({ id });
   }
 
+  async checkImportArchivedUsage(
+    refs: LibraryUsageItemRef[],
+    confirmInUse = false,
+  ): Promise<void> {
+    if (confirmInUse || refs.length === 0) {
+      return;
+    }
+    const usages = await this.usageProvider.countUsage(refs);
+    for (const u of usages) {
+      if (u.communities > 0 || u.references > 0) {
+        throw new LibraryItemInUseError({
+          communities: u.communities,
+          references: u.references,
+        });
+      }
+    }
+  }
+
   private async checkUsage(
     ref: LibraryUsageItemRef,
     confirmInUse: boolean,
