@@ -6,7 +6,7 @@ import {
   BookTitleTakenError,
   VolumeTakenError,
 } from '../../domain/errors/library.errors';
-import { BookRepository } from '../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../domain/ports/book-repository.port';
 import { PrismaTransactionContext } from './prisma-transaction-context';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { LibraryTheme } from '../../domain/entities/library-theme.entity';
 import { ThemeNameTakenError } from '../../domain/errors/library.errors';
-import { ThemeRepository } from '../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../domain/ports/theme-repository.port';
 import { PrismaTransactionContext } from './prisma-transaction-context';
 
 @Injectable()

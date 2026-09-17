@@ -3,18 +3,12 @@ import {
   BookArchivedError,
   SongNotFoundError,
 } from '../../../domain/errors/library.errors';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../../domain/ports/book-repository.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../../domain/ports/song-repository.port';
+import { BOOK_REPOSITORY } from '../../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SONG_REPOSITORY } from '../../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
 
 export interface RestoreSongCommand {
   id: string;

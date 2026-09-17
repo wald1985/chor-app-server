@@ -8,8 +8,8 @@ import { SongNumber } from '../value-objects/song-number';
 import { SongTitle } from '../value-objects/song-title';
 import { ThemeName } from '../value-objects/theme-name';
 import { Volume } from '../value-objects/volume';
-import {
-  ImportPlan,
+import { ImportPlan } from './import-plan';
+import type {
   ParsedBook,
   ParsedLibraryFile,
   ParsedSong,

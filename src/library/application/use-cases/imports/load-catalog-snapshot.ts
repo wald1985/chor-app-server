@@ -1,11 +1,11 @@
-import { BookRepository } from '../../../domain/ports/book-repository.port';
-import { SeriesRepository } from '../../../domain/ports/series-repository.port';
-import { SongRepository } from '../../../domain/ports/song-repository.port';
-import { ThemeRepository } from '../../../domain/ports/theme-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import type { SeriesRepository } from '../../../domain/ports/series-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
+import type { ThemeRepository } from '../../../domain/ports/theme-repository.port';
 import { LibraryBook } from '../../../domain/entities/library-book.entity';
 import { LibrarySeries } from '../../../domain/entities/library-series.entity';
-import { CatalogSnapshot } from '../../../domain/services/import-planner';
-import { ParsedLibraryFile } from '../../../domain/services/import-plan';
+import type { CatalogSnapshot } from '../../../domain/services/import-planner';
+import type { ParsedLibraryFile } from '../../../domain/services/import-plan';
 import { LibraryTitle } from '../../../domain/value-objects/library-title';
 
 export interface SnapshotRepositories {

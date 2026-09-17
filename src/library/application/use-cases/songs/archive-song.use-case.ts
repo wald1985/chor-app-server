@@ -1,14 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SongNotFoundError } from '../../../domain/errors/library.errors';
-import { CLOCK, Clock } from '../../../domain/ports/clock.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../../domain/ports/song-repository.port';
+import { CLOCK } from '../../../domain/ports/clock.port';
+import type { Clock } from '../../../domain/ports/clock.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SONG_REPOSITORY } from '../../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
 
 export interface ArchiveSongCommand {
   id: string;

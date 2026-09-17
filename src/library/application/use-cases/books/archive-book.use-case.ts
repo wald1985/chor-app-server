@@ -1,14 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BookNotFoundError } from '../../../domain/errors/library.errors';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../../domain/ports/book-repository.port';
-import { CLOCK, Clock } from '../../../domain/ports/clock.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
+import { BOOK_REPOSITORY } from '../../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import { CLOCK } from '../../../domain/ports/clock.port';
+import type { Clock } from '../../../domain/ports/clock.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
 
 export interface ArchiveBookCommand {
   id: string;

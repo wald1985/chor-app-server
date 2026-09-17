@@ -1,6 +1,6 @@
 import { LibraryItemInUseError } from '../../library';
 import { ArchiveWithUsageCheck } from './archive-with-usage-check';
-import {
+import type {
   LibraryItemUsage,
   LibraryUsageItemRef,
   LibraryUsageProvider,

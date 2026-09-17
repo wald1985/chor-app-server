@@ -7,22 +7,14 @@ import {
   SeriesNotFoundError,
   VolumeTakenError,
 } from '../../../domain/errors/library.errors';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../../domain/ports/book-repository.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../../domain/ports/series-repository.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../../domain/ports/song-repository.port';
+import { BOOK_REPOSITORY } from '../../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SERIES_REPOSITORY } from '../../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../../domain/ports/series-repository.port';
+import { SONG_REPOSITORY } from '../../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
 import { BookPlacement } from '../../../domain/value-objects/book-placement';
 import { Volume } from '../../../domain/value-objects/volume';
 

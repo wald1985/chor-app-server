@@ -2,7 +2,7 @@ import { LibraryBook } from '../../domain/entities/library-book.entity';
 import { LibrarySeries } from '../../domain/entities/library-series.entity';
 import { LibrarySong } from '../../domain/entities/library-song.entity';
 import { LibraryTheme } from '../../domain/entities/library-theme.entity';
-import {
+import type {
   BookSongItemView,
   BookSummaryView,
   BookView,

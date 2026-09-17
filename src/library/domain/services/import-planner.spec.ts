@@ -5,12 +5,9 @@ import { LibraryTheme } from '../entities/library-theme.entity';
 import { OptionalText } from '../value-objects/optional-text';
 import { SongNumber } from '../value-objects/song-number';
 import { SongTitle } from '../value-objects/song-title';
-import {
-  CatalogSnapshot,
-  ImportPlanner,
-  validateParsedFile,
-} from './import-planner';
-import { ParsedLibraryFile } from './import-plan';
+import { ImportPlanner, validateParsedFile } from './import-planner';
+import type { CatalogSnapshot } from './import-planner';
+import type { ParsedLibraryFile } from './import-plan';
 
 describe('ImportPlanner and validateParsedFile (Phase C6)', () => {
   const emptySnapshot: CatalogSnapshot = {

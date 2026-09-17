@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { LibrarySeries } from '../../domain/entities/library-series.entity';
 import { SeriesTitleTakenError } from '../../domain/errors/library.errors';
-import { SeriesRepository } from '../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../domain/ports/series-repository.port';
 import { PrismaTransactionContext } from './prisma-transaction-context';
 
 @Injectable()

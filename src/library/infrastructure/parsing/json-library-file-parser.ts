@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import {
+import type {
   LibraryFileParser,
   ParseResult,
 } from '../../domain/ports/library-file-parser.port';
-import {
+import type {
   ParsedBook,
   ParsedLibraryFile,
   ParsedSong,

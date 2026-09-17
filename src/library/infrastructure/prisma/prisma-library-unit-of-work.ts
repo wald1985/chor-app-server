@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { LibraryBusyError } from '../../domain/errors/library.errors';
-import { LibraryUnitOfWork } from '../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../domain/ports/library-unit-of-work.port';
 import { PrismaTransactionContext } from './prisma-transaction-context';
 
 export const LIBRARY_ADVISORY_LOCK_ID = 842719530192384n;

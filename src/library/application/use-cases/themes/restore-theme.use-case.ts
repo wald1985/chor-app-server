@@ -1,13 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ThemeNotFoundError } from '../../../domain/errors/library.errors';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  THEME_REPOSITORY,
-  ThemeRepository,
-} from '../../../domain/ports/theme-repository.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { THEME_REPOSITORY } from '../../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../../domain/ports/theme-repository.port';
 
 export interface RestoreThemeCommand {
   id: string;

@@ -1,13 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../domain/ports/book-repository.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../domain/ports/series-repository.port';
-import { SeriesView } from '../views/library.views';
+import { BOOK_REPOSITORY } from '../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../domain/ports/book-repository.port';
+import { SERIES_REPOSITORY } from '../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../domain/ports/series-repository.port';
+import type { SeriesView } from '../views/library.views';
 import { toSeriesView } from '../views/view-mappers';
 
 @Injectable()

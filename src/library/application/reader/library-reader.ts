@@ -2,18 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LibraryBook } from '../../domain/entities/library-book.entity';
 import { LibrarySong } from '../../domain/entities/library-song.entity';
 import { LibraryTheme } from '../../domain/entities/library-theme.entity';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../domain/ports/book-repository.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../domain/ports/song-repository.port';
-import {
-  THEME_REPOSITORY,
-  ThemeRepository,
-} from '../../domain/ports/theme-repository.port';
+import { BOOK_REPOSITORY } from '../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../domain/ports/book-repository.port';
+import { SONG_REPOSITORY } from '../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../domain/ports/song-repository.port';
+import { THEME_REPOSITORY } from '../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../domain/ports/theme-repository.port';
 import { LookupSongQuery } from '../queries/lookup-song.query';
 
 export const LIBRARY_READER = Symbol('LIBRARY_READER');

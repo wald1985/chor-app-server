@@ -2,13 +2,13 @@ import { LibraryBook } from '../../domain/entities/library-book.entity';
 import { LibrarySeries } from '../../domain/entities/library-series.entity';
 import { LibrarySong } from '../../domain/entities/library-song.entity';
 import { LibraryTheme } from '../../domain/entities/library-theme.entity';
-import { BookRepository } from '../../domain/ports/book-repository.port';
-import { Clock } from '../../domain/ports/clock.port';
-import { IdGenerator } from '../../domain/ports/id-generator.port';
-import { LibraryUnitOfWork } from '../../domain/ports/library-unit-of-work.port';
-import { SeriesRepository } from '../../domain/ports/series-repository.port';
-import { SongRepository } from '../../domain/ports/song-repository.port';
-import { ThemeRepository } from '../../domain/ports/theme-repository.port';
+import type { BookRepository } from '../../domain/ports/book-repository.port';
+import type { Clock } from '../../domain/ports/clock.port';
+import type { IdGenerator } from '../../domain/ports/id-generator.port';
+import type { LibraryUnitOfWork } from '../../domain/ports/library-unit-of-work.port';
+import type { SeriesRepository } from '../../domain/ports/series-repository.port';
+import type { SongRepository } from '../../domain/ports/song-repository.port';
+import type { ThemeRepository } from '../../domain/ports/theme-repository.port';
 
 export class FakeUnitOfWork implements LibraryUnitOfWork {
   public runCallCount = 0;

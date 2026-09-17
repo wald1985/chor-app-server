@@ -1,20 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LibrarySeries } from '../../../domain/entities/library-series.entity';
 import { SeriesTitleTakenError } from '../../../domain/errors/library.errors';
-import {
-  ID_GENERATOR,
-  IdGenerator,
-} from '../../../domain/ports/id-generator.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../../domain/ports/series-repository.port';
+import { ID_GENERATOR } from '../../../domain/ports/id-generator.port';
+import type { IdGenerator } from '../../../domain/ports/id-generator.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SERIES_REPOSITORY } from '../../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../../domain/ports/series-repository.port';
 import { LibraryTitle } from '../../../domain/value-objects/library-title';
-import { SeriesView } from '../../views/library.views';
+import type { SeriesView } from '../../views/library.views';
 import { toSeriesView } from '../../views/view-mappers';
 
 export interface CreateSeriesCommand {

@@ -6,10 +6,10 @@ import { JsonLibraryFileParser } from './json-library-file-parser';
 import { XlsxLibraryFileParser } from './xlsx-library-file-parser';
 import { DefaultLibraryFileParserRegistry } from './library-file-parser-registry';
 import {
-  CatalogSnapshot,
   ImportPlanner,
   validateParsedFile,
 } from '../../domain/services/import-planner';
+import type { CatalogSnapshot } from '../../domain/services/import-planner';
 
 describe('CsvLibraryFileParser & CSV Import (Phase C9)', () => {
   const jsonParser = new JsonLibraryFileParser();

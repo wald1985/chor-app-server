@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { LibrarySong } from '../../domain/entities/library-song.entity';
 import { SongNumberTakenError } from '../../domain/errors/library.errors';
-import { SongRepository } from '../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../domain/ports/song-repository.port';
 import { PrismaTransactionContext } from './prisma-transaction-context';
 
 type SongWithThemesRecord = {

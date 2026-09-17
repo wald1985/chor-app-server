@@ -1,23 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LibraryTheme } from '../../domain/entities/library-theme.entity';
 import { BookNotFoundError } from '../../domain/errors/library.errors';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../domain/ports/book-repository.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../domain/ports/series-repository.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../domain/ports/song-repository.port';
-import {
-  THEME_REPOSITORY,
-  ThemeRepository,
-} from '../../domain/ports/theme-repository.port';
-import { BookView } from '../views/library.views';
+import { BOOK_REPOSITORY } from '../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../domain/ports/book-repository.port';
+import { SERIES_REPOSITORY } from '../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../domain/ports/series-repository.port';
+import { SONG_REPOSITORY } from '../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../domain/ports/song-repository.port';
+import { THEME_REPOSITORY } from '../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../domain/ports/theme-repository.port';
+import type { BookView } from '../views/library.views';
 import { toBookView } from '../views/view-mappers';
 
 @Injectable()

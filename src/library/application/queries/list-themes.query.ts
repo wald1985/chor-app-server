@@ -1,13 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../domain/ports/song-repository.port';
-import {
-  THEME_REPOSITORY,
-  ThemeRepository,
-} from '../../domain/ports/theme-repository.port';
-import { ThemeView } from '../views/library.views';
+import { SONG_REPOSITORY } from '../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../domain/ports/song-repository.port';
+import { THEME_REPOSITORY } from '../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../domain/ports/theme-repository.port';
+import type { ThemeView } from '../views/library.views';
 import { toThemeView } from '../views/view-mappers';
 
 @Injectable()

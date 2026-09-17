@@ -5,8 +5,8 @@ import {
   ArchiveThemeUseCase,
   LibraryItemInUseError,
 } from '../../library';
-import {
-  LIBRARY_USAGE_PROVIDER,
+import { LIBRARY_USAGE_PROVIDER } from './ports/library-usage-provider.port';
+import type {
   LibraryUsageItemRef,
   LibraryUsageProvider,
 } from './ports/library-usage-provider.port';

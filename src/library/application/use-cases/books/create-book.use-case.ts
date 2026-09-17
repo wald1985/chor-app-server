@@ -7,26 +7,18 @@ import {
   SeriesNotFoundError,
   VolumeTakenError,
 } from '../../../domain/errors/library.errors';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../../domain/ports/book-repository.port';
-import {
-  ID_GENERATOR,
-  IdGenerator,
-} from '../../../domain/ports/id-generator.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../../domain/ports/series-repository.port';
+import { BOOK_REPOSITORY } from '../../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import { ID_GENERATOR } from '../../../domain/ports/id-generator.port';
+import type { IdGenerator } from '../../../domain/ports/id-generator.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SERIES_REPOSITORY } from '../../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../../domain/ports/series-repository.port';
 import { BookPlacement } from '../../../domain/value-objects/book-placement';
 import { LibraryTitle } from '../../../domain/value-objects/library-title';
 import { Volume } from '../../../domain/value-objects/volume';
-import { BookSummaryView } from '../../views/library.views';
+import type { BookSummaryView } from '../../views/library.views';
 import { toBookSummaryView } from '../../views/view-mappers';
 
 export interface CreateBookCommand {

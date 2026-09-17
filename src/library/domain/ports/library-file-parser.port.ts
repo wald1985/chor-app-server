@@ -1,4 +1,4 @@
-import { ParsedLibraryFile, PlanError } from '../services/import-plan';
+import type { ParsedLibraryFile, PlanError } from '../services/import-plan';
 
 export type ParseResult =
   | { ok: true; file: ParsedLibraryFile; format: 'JSON' | 'CSV' | 'XLSX' }
@@ -6,7 +6,7 @@ export type ParseResult =
 
 export interface LibraryFileParser {
   supports(filename: string): boolean;
-  parse(buffer: Buffer, filename: string): Promise<ParseResult> | ParseResult;
+  parse(buffer: Buffer): Promise<ParseResult> | ParseResult;
 }
 
 export interface LibraryFileParserRegistry {

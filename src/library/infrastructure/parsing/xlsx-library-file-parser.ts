@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import readXlsxFile from 'read-excel-file/node';
-import {
+import type {
   LibraryFileParser,
   ParseResult,
 } from '../../domain/ports/library-file-parser.port';
-import {
+import type {
   ParsedBook,
   ParsedLibraryFile,
   ParsedSong,

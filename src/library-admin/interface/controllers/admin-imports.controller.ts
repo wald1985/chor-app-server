@@ -24,8 +24,8 @@ import {
   PreviewImportUseCase,
 } from '../../../library';
 import { ArchiveWithUsageCheck } from '../../application/archive-with-usage-check';
-import {
-  LIBRARY_USAGE_PROVIDER,
+import { LIBRARY_USAGE_PROVIDER } from '../../application/ports/library-usage-provider.port';
+import type {
   LibraryItemUsage,
   LibraryUsageProvider,
 } from '../../application/ports/library-usage-provider.port';
@@ -33,7 +33,7 @@ import { JwtAuthGuard } from '../../../identity/interface/guards/jwt-auth.guard'
 import { SuperAdminGuard } from '../guards/super-admin.guard';
 import { ApplyImportDto } from '../dto/apply-import.dto';
 import { AdminImportExceptionFilter } from '../http/admin-import-exception.filter';
-import {
+import type {
   ImportBookPreviewView,
   ImportBookSongsView,
   ImportInUseView,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
+import type {
   LibraryFileParserRegistry,
   ParseResult,
 } from '../../domain/ports/library-file-parser.port';
@@ -19,15 +19,15 @@ export class DefaultLibraryFileParserRegistry implements LibraryFileParserRegist
     const ext = this.getExtension(filename);
 
     if (ext === '.json') {
-      return this.jsonParser.parse(buffer, filename);
+      return this.jsonParser.parse(buffer);
     }
 
     if (ext === '.csv') {
-      return this.csvParser.parse(buffer, filename);
+      return this.csvParser.parse(buffer);
     }
 
     if (ext === '.xlsx') {
-      return await this.xlsxParser.parse(buffer, filename);
+      return await this.xlsxParser.parse(buffer);
     }
 
     if (ext === '.xls' || ext === '.xlsm') {

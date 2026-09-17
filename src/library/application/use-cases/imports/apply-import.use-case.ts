@@ -1,33 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  BOOK_REPOSITORY,
-  BookRepository,
-} from '../../../domain/ports/book-repository.port';
-import { CLOCK, Clock } from '../../../domain/ports/clock.port';
-import {
-  ID_GENERATOR,
-  IdGenerator,
-} from '../../../domain/ports/id-generator.port';
-import {
-  LIBRARY_FILE_PARSER_REGISTRY,
-  LibraryFileParserRegistry,
-} from '../../../domain/ports/library-file-parser.port';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SERIES_REPOSITORY,
-  SeriesRepository,
-} from '../../../domain/ports/series-repository.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../../domain/ports/song-repository.port';
-import {
-  THEME_REPOSITORY,
-  ThemeRepository,
-} from '../../../domain/ports/theme-repository.port';
+import { BOOK_REPOSITORY } from '../../../domain/ports/book-repository.port';
+import type { BookRepository } from '../../../domain/ports/book-repository.port';
+import { CLOCK } from '../../../domain/ports/clock.port';
+import type { Clock } from '../../../domain/ports/clock.port';
+import { ID_GENERATOR } from '../../../domain/ports/id-generator.port';
+import type { IdGenerator } from '../../../domain/ports/id-generator.port';
+import { LIBRARY_FILE_PARSER_REGISTRY } from '../../../domain/ports/library-file-parser.port';
+import type { LibraryFileParserRegistry } from '../../../domain/ports/library-file-parser.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SERIES_REPOSITORY } from '../../../domain/ports/series-repository.port';
+import type { SeriesRepository } from '../../../domain/ports/series-repository.port';
+import { SONG_REPOSITORY } from '../../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
+import { THEME_REPOSITORY } from '../../../domain/ports/theme-repository.port';
+import type { ThemeRepository } from '../../../domain/ports/theme-repository.port';
 import {
   LibraryFileInvalidError,
   LibraryImportPlanChangedError,
@@ -36,8 +23,9 @@ import { LibraryBook } from '../../../domain/entities/library-book.entity';
 import { LibrarySeries } from '../../../domain/entities/library-series.entity';
 import { LibrarySong } from '../../../domain/entities/library-song.entity';
 import { LibraryTheme } from '../../../domain/entities/library-theme.entity';
-import {
-  ImportPlan,
+import { BookPlacement } from '../../../domain/value-objects/book-placement';
+import { ImportPlan } from '../../../domain/services/import-plan';
+import type {
   ImportPlanSummary,
   PlanBookItem,
   PlanSeriesItem,
@@ -45,10 +33,10 @@ import {
   PlanThemeItem,
 } from '../../../domain/services/import-plan';
 import {
-  CatalogSnapshot,
   ImportPlanner,
   validateParsedFile,
 } from '../../../domain/services/import-planner';
+import type { CatalogSnapshot } from '../../../domain/services/import-planner';
 import { loadCatalogSnapshot } from './load-catalog-snapshot';
 
 export interface ApplyImportCommand {
@@ -228,7 +216,9 @@ export class ApplyImportUseCase {
       book.restore();
     }
     if (placementChanged) {
-      book.place({ seriesId: targetSeriesId, volume: item.volume });
+      book.place(
+        new BookPlacement({ seriesId: targetSeriesId, volume: item.volume }),
+      );
     }
     await this.bookRepo.save(book);
     ctx.booksIdMap.set(item.titleKey, book.id);

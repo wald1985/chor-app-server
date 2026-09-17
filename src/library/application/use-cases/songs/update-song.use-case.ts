@@ -1,18 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UpdateSongChanges } from '../../../domain/entities/library-song.entity';
+import type { UpdateSongChanges } from '../../../domain/entities/library-song.entity';
 import {
   SongArchivedError,
   SongNotFoundError,
   SongNumberTakenError,
 } from '../../../domain/errors/library.errors';
-import {
-  LIBRARY_UNIT_OF_WORK,
-  LibraryUnitOfWork,
-} from '../../../domain/ports/library-unit-of-work.port';
-import {
-  SONG_REPOSITORY,
-  SongRepository,
-} from '../../../domain/ports/song-repository.port';
+import { LIBRARY_UNIT_OF_WORK } from '../../../domain/ports/library-unit-of-work.port';
+import type { LibraryUnitOfWork } from '../../../domain/ports/library-unit-of-work.port';
+import { SONG_REPOSITORY } from '../../../domain/ports/song-repository.port';
+import type { SongRepository } from '../../../domain/ports/song-repository.port';
 import { SongNumber } from '../../../domain/value-objects/song-number';
 import { SongTitle } from '../../../domain/value-objects/song-title';
 

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { parse as parseCsvSync } from 'csv-parse/sync';
-import {
+import type {
   LibraryFileParser,
   ParseResult,
 } from '../../domain/ports/library-file-parser.port';
-import {
+import type {
   ParsedBook,
   ParsedLibraryFile,
   ParsedSong,
