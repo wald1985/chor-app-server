@@ -17,6 +17,7 @@ export interface SongRepository {
   saveMany(songs: LibrarySong[]): Promise<void>;
   createMany(songs: LibrarySong[]): Promise<void>;
   rescope(bookId: string, newScopeId: string): Promise<void>;
+  countActiveSongsByTheme(): Promise<Map<string, number>>;
 }
 
 export const SONG_REPOSITORY = Symbol('SONG_REPOSITORY');

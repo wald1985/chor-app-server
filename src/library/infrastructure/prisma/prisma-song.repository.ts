@@ -171,6 +171,19 @@ export class PrismaSongRepository implements SongRepository {
     });
   }
 
+  async countActiveSongsByTheme(): Promise<Map<string, number>> {
+    const counts = await this.client.librarySongTheme.groupBy({
+      by: ['themeId'],
+      where: { song: { archivedAt: null } },
+      _count: { songId: true },
+    });
+    const map = new Map<string, number>();
+    for (const item of counts) {
+      map.set(item.themeId, item._count.songId);
+    }
+    return map;
+  }
+
   private async handleP2002(error: unknown, song: LibrarySong): Promise<void> {
     const err = error as { code?: string };
     if (err?.code !== 'P2002') {

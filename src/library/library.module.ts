@@ -1,5 +1,15 @@
 import { Module } from '@nestjs/common';
 import { IdentityModule } from '../identity/identity.module';
+import { GetBookQuery } from './application/queries/get-book.query';
+import { GetSongQuery } from './application/queries/get-song.query';
+import { ListBooksQuery } from './application/queries/list-books.query';
+import { ListSeriesQuery } from './application/queries/list-series.query';
+import { ListThemesQuery } from './application/queries/list-themes.query';
+import { LookupSongQuery } from './application/queries/lookup-song.query';
+import {
+  DefaultLibraryReader,
+  LIBRARY_READER,
+} from './application/reader/library-reader';
 import { BOOK_REPOSITORY } from './domain/ports/book-repository.port';
 import { CLOCK } from './domain/ports/clock.port';
 import { ID_GENERATOR } from './domain/ports/id-generator.port';
@@ -15,9 +25,12 @@ import { PrismaSongRepository } from './infrastructure/prisma/prisma-song.reposi
 import { PrismaThemeRepository } from './infrastructure/prisma/prisma-theme.repository';
 import { PrismaTransactionContext } from './infrastructure/prisma/prisma-transaction-context';
 import { SystemClock } from './infrastructure/system-clock';
+import { PrismaModule } from '../shared/prisma/prisma.module';
+import { LibraryController } from './interface/controllers/library.controller';
 
 @Module({
-  imports: [IdentityModule],
+  imports: [IdentityModule, PrismaModule],
+  controllers: [LibraryController],
   providers: [
     PrismaTransactionContext,
     CryptoIdGenerator,
@@ -34,23 +47,15 @@ import { SystemClock } from './infrastructure/system-clock';
     { provide: LIBRARY_UNIT_OF_WORK, useClass: PrismaLibraryUnitOfWork },
     { provide: ID_GENERATOR, useClass: CryptoIdGenerator },
     { provide: CLOCK, useClass: SystemClock },
+    ListSeriesQuery,
+    ListBooksQuery,
+    GetBookQuery,
+    LookupSongQuery,
+    GetSongQuery,
+    ListThemesQuery,
+    DefaultLibraryReader,
+    { provide: LIBRARY_READER, useClass: DefaultLibraryReader },
   ],
-  exports: [
-    SERIES_REPOSITORY,
-    BOOK_REPOSITORY,
-    SONG_REPOSITORY,
-    THEME_REPOSITORY,
-    LIBRARY_UNIT_OF_WORK,
-    ID_GENERATOR,
-    CLOCK,
-    PrismaTransactionContext,
-    PrismaSeriesRepository,
-    PrismaBookRepository,
-    PrismaSongRepository,
-    PrismaThemeRepository,
-    PrismaLibraryUnitOfWork,
-    CryptoIdGenerator,
-    SystemClock,
-  ],
+  exports: [LIBRARY_READER],
 })
 export class LibraryModule {}
