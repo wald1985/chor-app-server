@@ -13,6 +13,12 @@ enum CommunityRole {
 
 enum CommunityPermission {
   PEOPLE_MANAGE
+  REPERTOIRE_MANAGE
+}
+
+enum ThemeSource {
+  LIBRARY
+  COMMUNITY
 }
 
 model Community {
@@ -21,7 +27,12 @@ model Community {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  memberships CommunityMembership[]
+  memberships          CommunityMembership[]
+  folders              Folder[]
+  folderSongs          FolderSong[]
+  bookAttachments      BookAttachment[]
+  themes               Theme[]
+  songThemeAssignments SongThemeAssignment[]
 
   @@map("communities")
 }
@@ -156,5 +167,92 @@ model LibrarySongTheme {
   @@id([songId, themeId])
   @@index([themeId])
   @@map("library_song_themes")
+}
+
+model Folder {
+  id          String       @id @default(uuid())
+  communityId String
+  title       String
+  titleKey    String
+  archivedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  community Community    @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  songs     FolderSong[]
+
+  @@unique([communityId, titleKey])
+  @@index([communityId, archivedAt])
+  @@map("folders")
+}
+
+model FolderSong {
+  id          String    @id @default(uuid())
+  communityId String
+  folderId    String
+  number      String
+  numberKey   String
+  sortKey     String
+  title       String
+  author      String?
+  arranger    String?
+  isNew       Boolean   @default(false)
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  folder    Folder    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([folderId, numberKey])
+  @@index([folderId, archivedAt, sortKey])
+  @@index([communityId, archivedAt])
+  @@map("folder_songs")
+}
+
+model BookAttachment {
+  id            String    @id @default(uuid())
+  communityId   String
+  libraryBookId String
+  archivedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, libraryBookId])
+  @@index([communityId, archivedAt])
+  @@map("book_attachments")
+}
+
+model Theme {
+  id          String    @id @default(uuid())
+  communityId String
+  name        String
+  nameKey     String
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, nameKey])
+  @@index([communityId, archivedAt])
+  @@map("themes")
+}
+
+model SongThemeAssignment {
+  communityId String
+  songId      String
+  themeSource ThemeSource
+  themeId     String
+  createdAt   DateTime    @default(now())
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, songId, themeId])
+  @@index([communityId, songId])
+  @@index([communityId, themeId])
+  @@map("song_theme_assignments")
 }
 
