@@ -1,5 +1,14 @@
 import { Module } from '@nestjs/common';
+import { LibraryModule } from '../library';
 import { PrismaModule } from '../shared/prisma/prisma.module';
+import {
+  LookupCommunitySongQuery,
+  SONG_LOOKUP,
+} from './application/queries/lookup-community-song.query';
+import { ArchiveAttachmentUseCase } from './application/use-cases/attachments/archive-attachment.use-case';
+import { AttachBookUseCase } from './application/use-cases/attachments/attach-book.use-case';
+import { DetachBookUseCase } from './application/use-cases/attachments/detach-book.use-case';
+import { GetAttachmentsUseCase } from './application/use-cases/attachments/get-attachments.use-case';
 import { ArchiveFolderSongUseCase } from './application/use-cases/folder-songs/archive-folder-song.use-case';
 import { CreateFolderSongUseCase } from './application/use-cases/folder-songs/create-folder-song.use-case';
 import { UpdateFolderSongUseCase } from './application/use-cases/folder-songs/update-folder-song.use-case';
@@ -7,6 +16,7 @@ import { ArchiveFolderUseCase } from './application/use-cases/folders/archive-fo
 import { CreateFolderUseCase } from './application/use-cases/folders/create-folder.use-case';
 import { ListFoldersUseCase } from './application/use-cases/folders/list-folders.use-case';
 import { RenameFolderUseCase } from './application/use-cases/folders/rename-folder.use-case';
+import { GetCommunitySongsUseCase } from './application/use-cases/songs/get-community-songs.use-case';
 import { CreateThemeUseCase } from './application/use-cases/themes/create-theme.use-case';
 import { SetSongThemesUseCase } from './application/use-cases/themes/set-song-themes.use-case';
 import { BOOK_ATTACHMENT_REPOSITORY } from './domain/ports/book-attachment-repository.port';
@@ -30,10 +40,16 @@ const USE_CASES = [
   ArchiveFolderSongUseCase,
   CreateThemeUseCase,
   SetSongThemesUseCase,
+  AttachBookUseCase,
+  ArchiveAttachmentUseCase,
+  DetachBookUseCase,
+  GetAttachmentsUseCase,
+  GetCommunitySongsUseCase,
+  LookupCommunitySongQuery,
 ];
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, LibraryModule],
   controllers: [],
   providers: [
     ...USE_CASES,
@@ -57,6 +73,10 @@ const USE_CASES = [
       provide: SONG_THEME_ASSIGNMENT_REPOSITORY,
       useClass: PrismaSongThemeAssignmentRepository,
     },
+    {
+      provide: SONG_LOOKUP,
+      useClass: LookupCommunitySongQuery,
+    },
   ],
   exports: [
     ...USE_CASES,
@@ -65,6 +85,7 @@ const USE_CASES = [
     BOOK_ATTACHMENT_REPOSITORY,
     THEME_REPOSITORY,
     SONG_THEME_ASSIGNMENT_REPOSITORY,
+    SONG_LOOKUP,
   ],
 })
 export class RepertoireModule {}

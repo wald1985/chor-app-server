@@ -42,3 +42,10 @@ export * from './application/use-cases/folder-songs/update-folder-song.use-case'
 export * from './application/use-cases/folder-songs/archive-folder-song.use-case';
 export * from './application/use-cases/themes/create-theme.use-case';
 export * from './application/use-cases/themes/set-song-themes.use-case';
+export * from './application/use-cases/attachments/attach-book.use-case';
+export * from './application/use-cases/attachments/archive-attachment.use-case';
+export * from './application/use-cases/attachments/detach-book.use-case';
+export * from './application/use-cases/attachments/get-attachments.use-case';
+export * from './application/use-cases/songs/get-community-songs.use-case';
+export * from './application/queries/lookup-community-song.query';
+export * from './application/views/repertoire.views';
