@@ -101,8 +101,12 @@ describe('Auth (e2e)', () => {
       expect(res.body.memberships[0]).toMatchObject({
         communityName: 'Test Choir',
         role: 'ADMINISTRATOR',
-        permissions: ['PEOPLE_MANAGE'],
+        permissions: expect.arrayContaining([
+          'PEOPLE_MANAGE',
+          'REPERTOIRE_MANAGE',
+        ]),
       });
+
       expect(typeof res.body.memberships[0].communityId).toBe('string');
     });
 
@@ -152,7 +156,10 @@ describe('Auth (e2e)', () => {
       expect(res.body.memberships[0]).toMatchObject({
         communityName: 'Test Choir',
         role: 'ADMINISTRATOR',
-        permissions: ['PEOPLE_MANAGE'],
+        permissions: expect.arrayContaining([
+          'PEOPLE_MANAGE',
+          'REPERTOIRE_MANAGE',
+        ]),
       });
     });
 

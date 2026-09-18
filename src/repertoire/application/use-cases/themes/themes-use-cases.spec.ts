@@ -2,6 +2,7 @@ import { Theme } from '../../../domain/entities/theme.entity';
 import { ThemeNameConflictError } from '../../../domain/errors/repertoire.errors';
 import { ThemeSource } from '../../../domain/value-objects/theme-source';
 import { CreateThemeUseCase } from './create-theme.use-case';
+import { GetCommunityThemesUseCase } from './get-community-themes.use-case';
 import { SetSongThemesUseCase } from './set-song-themes.use-case';
 
 describe('Theme Use Cases', () => {
@@ -89,6 +90,80 @@ describe('Theme Use Cases', () => {
           { themeSource: ThemeSource.LIBRARY, themeId: 'lt-1' },
         ],
       );
+    });
+  });
+
+  describe('GetCommunityThemesUseCase', () => {
+    it('returns combined community themes and attached library themes sorted by name', async () => {
+      const bookAttachmentRepo = {
+        findById: jest.fn(),
+        findByCommunityAndLibraryBookId: jest.fn(),
+        findAllByCommunity: jest.fn(),
+        save: jest.fn(),
+        delete: jest.fn(),
+      };
+      const libraryReader = {
+        findBooks: jest.fn(),
+        findSongsByBookIds: jest.fn(),
+        findSongs: jest.fn(),
+        lookupSong: jest.fn(),
+        findThemes: jest.fn(),
+        listThemes: jest.fn(),
+      };
+      const getCommunityThemesUseCase = new GetCommunityThemesUseCase(
+        themeRepo,
+        bookAttachmentRepo,
+        libraryReader,
+      );
+
+      themeRepo.findAllByCommunity.mockResolvedValue([
+        Theme.create({
+          id: 'ct-1',
+          communityId: 'c-1',
+          name: 'Zion Songs',
+        }),
+      ]);
+
+      bookAttachmentRepo.findAllByCommunity.mockResolvedValue([
+        {
+          libraryBookId: 'lb-1',
+          isArchived: false,
+        },
+      ]);
+
+      libraryReader.findSongsByBookIds.mockResolvedValue([
+        {
+          id: 'ls-1',
+          themes: [
+            { id: 'lt-1', name: 'Advent', archived: false },
+            { id: 'lt-2', name: 'Zion Songs', archived: false },
+          ],
+        },
+      ]);
+
+      const result = await getCommunityThemesUseCase.execute({
+        communityId: 'c-1',
+      });
+
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({
+        id: 'lt-1',
+        name: 'Advent',
+        source: ThemeSource.LIBRARY,
+        archived: false,
+      });
+      expect(result[1]).toEqual({
+        id: 'lt-2',
+        name: 'Zion Songs',
+        source: ThemeSource.LIBRARY,
+        archived: false,
+      });
+      expect(result[2]).toEqual({
+        id: 'ct-1',
+        name: 'Zion Songs',
+        source: ThemeSource.COMMUNITY,
+        archived: false,
+      });
     });
   });
 });

@@ -68,7 +68,9 @@ describe('CommunityMemberGuard (e2e)', () => {
       communityId: admin1.communityId,
       role: 'ADMINISTRATOR',
     });
-    expect(res.body.permissions).toEqual(['PEOPLE_MANAGE']);
+    expect(res.body.permissions).toEqual(
+      expect.arrayContaining(['PEOPLE_MANAGE', 'REPERTOIRE_MANAGE']),
+    );
   });
 
   it('rejects access to another community with 403 NOT_COMMUNITY_MEMBER', async () => {

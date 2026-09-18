@@ -46,3 +46,10 @@ export interface FolderView {
   archivedAt?: Date | null;
   createdAt?: Date;
 }
+
+export interface CommunityThemeView {
+  id: string;
+  name: string;
+  source: ThemeSource;
+  archived: boolean;
+}

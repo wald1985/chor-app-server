@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { IdentityModule } from '../identity/identity.module';
 import { LibraryModule } from '../library';
 import { PrismaModule } from '../shared/prisma/prisma.module';
 import {
@@ -18,6 +19,7 @@ import { ListFoldersUseCase } from './application/use-cases/folders/list-folders
 import { RenameFolderUseCase } from './application/use-cases/folders/rename-folder.use-case';
 import { GetCommunitySongsUseCase } from './application/use-cases/songs/get-community-songs.use-case';
 import { CreateThemeUseCase } from './application/use-cases/themes/create-theme.use-case';
+import { GetCommunityThemesUseCase } from './application/use-cases/themes/get-community-themes.use-case';
 import { SetSongThemesUseCase } from './application/use-cases/themes/set-song-themes.use-case';
 import { BOOK_ATTACHMENT_REPOSITORY } from './domain/ports/book-attachment-repository.port';
 import { FOLDER_REPOSITORY } from './domain/ports/folder-repository.port';
@@ -29,6 +31,11 @@ import { PrismaFolderRepository } from './infrastructure/prisma/prisma-folder.re
 import { PrismaFolderSongRepository } from './infrastructure/prisma/prisma-folder-song.repository';
 import { PrismaSongThemeAssignmentRepository } from './infrastructure/prisma/prisma-song-theme-assignment.repository';
 import { PrismaThemeRepository } from './infrastructure/prisma/prisma-theme.repository';
+import { CommunityAttachmentsController } from './interface/controllers/community-attachments.controller';
+import { CommunityFolderSongsController } from './interface/controllers/community-folder-songs.controller';
+import { CommunityFoldersController } from './interface/controllers/community-folders.controller';
+import { CommunitySongsController } from './interface/controllers/community-songs.controller';
+import { CommunityThemesController } from './interface/controllers/community-themes.controller';
 
 const USE_CASES = [
   CreateFolderUseCase,
@@ -40,6 +47,7 @@ const USE_CASES = [
   ArchiveFolderSongUseCase,
   CreateThemeUseCase,
   SetSongThemesUseCase,
+  GetCommunityThemesUseCase,
   AttachBookUseCase,
   ArchiveAttachmentUseCase,
   DetachBookUseCase,
@@ -49,8 +57,14 @@ const USE_CASES = [
 ];
 
 @Module({
-  imports: [PrismaModule, LibraryModule],
-  controllers: [],
+  imports: [PrismaModule, LibraryModule, IdentityModule],
+  controllers: [
+    CommunityAttachmentsController,
+    CommunityFoldersController,
+    CommunityFolderSongsController,
+    CommunitySongsController,
+    CommunityThemesController,
+  ],
   providers: [
     ...USE_CASES,
     {

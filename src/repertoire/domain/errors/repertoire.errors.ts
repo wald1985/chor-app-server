@@ -91,9 +91,9 @@ export class ThemeArchivedError extends RepertoireError {
 export class ThemeNameConflictError extends RepertoireError {
   constructor(
     public readonly communityId: string,
-    public readonly name: string,
+    public readonly themeName: string,
   ) {
-    super(`Theme name already exists: ${name}`);
+    super(`Theme name already exists: ${themeName}`);
   }
 }
 
