@@ -6,6 +6,7 @@ import { IdentityModule } from './identity/identity.module';
 import { LibraryModule } from './library';
 import { LibraryAdminModule } from './library-admin';
 import { NotificationsModule } from './notifications';
+import { RepertoireModule } from './repertoire';
 import { PrismaModule } from './shared/prisma/prisma.module';
 import { SuperadminModule } from './superadmin';
 
@@ -18,6 +19,7 @@ import { SuperadminModule } from './superadmin';
     SuperadminModule,
     LibraryModule,
     LibraryAdminModule,
+    RepertoireModule,
   ],
   controllers: [AppController],
   providers: [AppService],
