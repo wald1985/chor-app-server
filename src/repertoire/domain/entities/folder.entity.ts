@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { FolderArchivedError } from '../errors/repertoire.errors';
 import { FolderTitle } from '../value-objects/folder-title';
 
@@ -27,7 +28,7 @@ export class Folder {
         : new FolderTitle(props.title);
 
     return new Folder({
-      id: props.id ?? '',
+      id: props.id || randomUUID(),
       communityId: props.communityId,
       title,
       archivedAt: props.archivedAt ?? null,

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { ThemeArchivedError } from '../errors/repertoire.errors';
 import { ThemeName } from '../value-objects/theme-name';
 
@@ -25,7 +26,7 @@ export class Theme {
       props.name instanceof ThemeName ? props.name : new ThemeName(props.name);
 
     return new Theme({
-      id: props.id ?? '',
+      id: props.id || randomUUID(),
       communityId: props.communityId,
       name,
       archivedAt: props.archivedAt ?? null,

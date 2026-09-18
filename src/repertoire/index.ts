@@ -24,3 +24,10 @@ export * from './domain/ports/folder-song-repository.port';
 export * from './domain/ports/book-attachment-repository.port';
 export * from './domain/ports/theme-repository.port';
 export * from './domain/ports/song-theme-assignment-repository.port';
+
+// Infrastructure
+export * from './infrastructure/prisma/prisma-folder.repository';
+export * from './infrastructure/prisma/prisma-folder-song.repository';
+export * from './infrastructure/prisma/prisma-book-attachment.repository';
+export * from './infrastructure/prisma/prisma-theme.repository';
+export * from './infrastructure/prisma/prisma-song-theme-assignment.repository';

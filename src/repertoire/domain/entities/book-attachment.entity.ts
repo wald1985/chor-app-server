@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 export interface BookAttachmentProps {
   id: string;
   communityId: string;
@@ -19,7 +21,7 @@ export class BookAttachment {
     updatedAt?: Date;
   }): BookAttachment {
     return new BookAttachment({
-      id: props.id ?? '',
+      id: props.id || randomUUID(),
       communityId: props.communityId,
       libraryBookId: props.libraryBookId,
       archivedAt: props.archivedAt ?? null,

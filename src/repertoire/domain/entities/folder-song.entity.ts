@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   FolderArchivedError,
   FolderSongArchivedError,
@@ -65,7 +66,7 @@ export class FolderSong {
         : new OptionalText(props.arranger, 'arranger');
 
     return new FolderSong({
-      id: props.id ?? '',
+      id: props.id || randomUUID(),
       communityId: folder.communityId,
       folderId: folder.id,
       number,

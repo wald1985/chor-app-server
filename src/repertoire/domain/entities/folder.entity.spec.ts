@@ -8,7 +8,8 @@ describe('Folder Entity', () => {
       title: 'Mappe',
     });
 
-    expect(folder.id).toBe('');
+    expect(folder.id).toBeDefined();
+    expect(folder.id.length).toBeGreaterThan(0);
     expect(folder.communityId).toBe('comm-1');
     expect(folder.titleValue).toBe('Mappe');
     expect(folder.titleKey).toBe('mappe');
