@@ -31,3 +31,14 @@ export * from './infrastructure/prisma/prisma-folder-song.repository';
 export * from './infrastructure/prisma/prisma-book-attachment.repository';
 export * from './infrastructure/prisma/prisma-theme.repository';
 export * from './infrastructure/prisma/prisma-song-theme-assignment.repository';
+
+// Use Cases
+export * from './application/use-cases/folders/create-folder.use-case';
+export * from './application/use-cases/folders/rename-folder.use-case';
+export * from './application/use-cases/folders/archive-folder.use-case';
+export * from './application/use-cases/folders/list-folders.use-case';
+export * from './application/use-cases/folder-songs/create-folder-song.use-case';
+export * from './application/use-cases/folder-songs/update-folder-song.use-case';
+export * from './application/use-cases/folder-songs/archive-folder-song.use-case';
+export * from './application/use-cases/themes/create-theme.use-case';
+export * from './application/use-cases/themes/set-song-themes.use-case';
