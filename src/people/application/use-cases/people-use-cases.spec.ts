@@ -51,7 +51,7 @@ class InMemoryPersonRepository implements PersonRepository {
 
   save(person: Person) {
     this.items.set(person.id, person);
-    return Promise.resolve();
+    return Promise.resolve(person);
   }
 }
 

@@ -50,8 +50,7 @@ export class UpdatePersonUseCase {
       person.changeRoles(roles);
     }
 
-    await this.personRepo.save(person);
-    return person;
+    return this.personRepo.save(person);
   }
 
   private async assertNameFree(person: Person, name: PersonName) {

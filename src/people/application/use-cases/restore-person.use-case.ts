@@ -21,10 +21,10 @@ export class RestorePersonUseCase {
     if (!person) {
       throw new PersonNotFoundError(command.personId);
     }
-    if (person.isArchived) {
-      person.restore();
-      await this.personRepo.save(person);
+    if (!person.isArchived) {
+      return person;
     }
-    return person;
+    person.restore();
+    return this.personRepo.save(person);
   }
 }

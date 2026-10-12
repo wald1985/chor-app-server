@@ -40,7 +40,6 @@ export class CreatePersonUseCase {
       name,
       roles,
     });
-    await this.personRepo.save(person);
-    return person;
+    return this.personRepo.save(person);
   }
 }

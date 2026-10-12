@@ -67,7 +67,7 @@ export class PrismaPersonRepository implements PersonRepository {
     return records.map((record) => this.toDomain(record));
   }
 
-  async save(person: Person): Promise<void> {
+  async save(person: Person): Promise<Person> {
     const data = {
       name: person.nameValue,
       nameKey: person.nameKey,
@@ -75,11 +75,12 @@ export class PrismaPersonRepository implements PersonRepository {
       archivedAt: person.archivedAt,
     };
     try {
-      await this.prisma.person.upsert({
+      const record = await this.prisma.person.upsert({
         where: { id: person.id },
         create: { id: person.id, communityId: person.communityId, ...data },
         update: data,
       });
+      return this.toDomain(record);
     } catch (error: unknown) {
       if ((error as { code?: string })?.code === 'P2002') {
         await this.throwNameTaken(person);

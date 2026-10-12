@@ -25,10 +25,10 @@ export class ArchivePersonUseCase {
     if (!person) {
       throw new PersonNotFoundError(command.personId);
     }
-    if (!person.isArchived) {
-      person.archive(new Date());
-      await this.personRepo.save(person);
+    if (person.isArchived) {
+      return person;
     }
-    return person;
+    person.archive(new Date());
+    return this.personRepo.save(person);
   }
 }
