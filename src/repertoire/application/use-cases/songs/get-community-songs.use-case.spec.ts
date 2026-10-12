@@ -275,4 +275,92 @@ describe('GetCommunitySongsUseCase', () => {
     });
     expect(containerRes).toHaveLength(0);
   });
+
+  it('includeInactive loads archived attachments, songs and folders; songIds restricts the result', async () => {
+    bookAttachmentRepo.findAllByCommunity.mockResolvedValue([
+      BookAttachment.reconstitute({
+        id: 'att-1',
+        communityId: 'c-1',
+        libraryBookId: 'book-1',
+        archivedAt: new Date('2026-01-01'),
+      }),
+    ]);
+    libraryReader.findBooks.mockResolvedValue([
+      {
+        id: 'book-1',
+        title: 'Chorbuch A',
+        seriesId: null,
+        volume: null,
+        archived: false,
+      },
+    ]);
+    libraryReader.findSongsByBookIds.mockResolvedValue([
+      {
+        id: 'ls-1',
+        bookId: 'book-1',
+        seriesId: null,
+        volume: null,
+        number: '1',
+        title: 'Archiviertes Lied',
+        author: null,
+        arranger: null,
+        themes: [],
+        archived: true,
+      },
+      {
+        id: 'ls-2',
+        bookId: 'book-1',
+        seriesId: null,
+        volume: null,
+        number: '2',
+        title: 'Anderes Lied',
+        author: null,
+        arranger: null,
+        themes: [],
+        archived: false,
+      },
+    ]);
+    folderRepo.findAllByCommunity.mockResolvedValue([]);
+    folderSongRepo.findAllByCommunity.mockResolvedValue([]);
+    themeRepo.findAllByCommunity.mockResolvedValue([]);
+    songThemeAssignmentRepo.findByCommunityId.mockResolvedValue([]);
+
+    const result = await getCommunitySongsUseCase.execute({
+      communityId: 'c-1',
+      songIds: ['ls-1'],
+      includeInactive: true,
+    });
+
+    expect(result.map((s) => s.id)).toEqual(['ls-1']);
+    expect(result[0].archived).toBe(true);
+    expect(bookAttachmentRepo.findAllByCommunity).toHaveBeenCalledWith('c-1', {
+      includeArchived: true,
+    });
+    expect(libraryReader.findSongsByBookIds).toHaveBeenCalledWith(['book-1'], {
+      includeArchived: true,
+    });
+    expect(folderRepo.findAllByCommunity).toHaveBeenCalledWith('c-1', {
+      includeArchived: true,
+    });
+    expect(folderSongRepo.findAllByCommunity).toHaveBeenCalledWith('c-1', {
+      includeArchived: true,
+    });
+  });
+
+  it('by default only active attachments, songs and folders are loaded', async () => {
+    bookAttachmentRepo.findAllByCommunity.mockResolvedValue([]);
+    folderRepo.findAllByCommunity.mockResolvedValue([]);
+    folderSongRepo.findAllByCommunity.mockResolvedValue([]);
+    themeRepo.findAllByCommunity.mockResolvedValue([]);
+    songThemeAssignmentRepo.findByCommunityId.mockResolvedValue([]);
+
+    await getCommunitySongsUseCase.execute({ communityId: 'c-1' });
+
+    expect(bookAttachmentRepo.findAllByCommunity).toHaveBeenCalledWith('c-1', {
+      includeArchived: false,
+    });
+    expect(folderSongRepo.findAllByCommunity).toHaveBeenCalledWith('c-1', {
+      includeArchived: false,
+    });
+  });
 });

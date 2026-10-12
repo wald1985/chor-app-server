@@ -38,6 +38,13 @@ import type {
 export interface GetCommunitySongsQuery {
   communityId: string;
   songId?: string;
+  /** Restrict to these song ids (used to resolve history in one pass). */
+  songIds?: string[];
+  /**
+   * Also return archived songs, songs of archived folders and songs of
+   * detached books, so logged songs stay resolvable (ADR 0009, Q6).
+   */
+  includeInactive?: boolean;
   search?: string;
   themeIds?: string[];
   containerId?: string;
@@ -66,11 +73,13 @@ export class GetCommunitySongsUseCase {
   ) {}
 
   async execute(query: GetCommunitySongsQuery): Promise<CommunitySongView[]> {
+    const includeInactive = query.includeInactive ?? false;
     const { booksMap, librarySongs } = await this.loadLibrarySongs(
       query.communityId,
+      includeInactive,
     );
     const { foldersMap, folderSongs, customThemesMap, assignmentsBySong } =
-      await this.loadCommunityData(query.communityId);
+      await this.loadCommunityData(query.communityId, includeInactive);
 
     const extraLibThemesMap = await this.loadExtraLibThemes(assignmentsBySong);
 
@@ -93,13 +102,16 @@ export class GetCommunitySongsUseCase {
     return this.sortSongs(filtered);
   }
 
-  private async loadLibrarySongs(communityId: string): Promise<{
+  private async loadLibrarySongs(
+    communityId: string,
+    includeInactive: boolean,
+  ): Promise<{
     booksMap: Map<string, LibraryBookRef>;
     librarySongs: LibrarySongRef[];
   }> {
     const attachments = await this.bookAttachmentRepo.findAllByCommunity(
       communityId,
-      { includeArchived: false },
+      { includeArchived: includeInactive },
     );
     const bookIds = attachments.map((a) => a.libraryBookId);
     if (bookIds.length === 0) {
@@ -108,7 +120,7 @@ export class GetCommunitySongsUseCase {
     const [books, librarySongs] = await Promise.all([
       this.libraryReader.findBooks(bookIds),
       this.libraryReader.findSongsByBookIds(bookIds, {
-        includeArchived: false,
+        includeArchived: includeInactive,
       }),
     ]);
     return {
@@ -117,7 +129,10 @@ export class GetCommunitySongsUseCase {
     };
   }
 
-  private async loadCommunityData(communityId: string): Promise<{
+  private async loadCommunityData(
+    communityId: string,
+    includeInactive: boolean,
+  ): Promise<{
     foldersMap: Map<string, Folder>;
     folderSongs: FolderSong[];
     customThemesMap: Map<string, Theme>;
@@ -126,10 +141,10 @@ export class GetCommunitySongsUseCase {
     const [folders, folderSongs, customThemes, assignments] = await Promise.all(
       [
         this.folderRepo.findAllByCommunity(communityId, {
-          includeArchived: false,
+          includeArchived: includeInactive,
         }),
         this.folderSongRepo.findAllByCommunity(communityId, {
-          includeArchived: false,
+          includeArchived: includeInactive,
         }),
         this.themeRepo.findAllByCommunity(communityId, {
           includeArchived: false,
@@ -299,6 +314,10 @@ export class GetCommunitySongsUseCase {
     let filtered = songs;
     if (query.songId) {
       filtered = filtered.filter((s) => s.id === query.songId);
+    }
+    if (query.songIds) {
+      const wanted = new Set(query.songIds);
+      filtered = filtered.filter((s) => wanted.has(s.id));
     }
     if (query.containerId) {
       filtered = filtered.filter((s) => s.container.id === query.containerId);

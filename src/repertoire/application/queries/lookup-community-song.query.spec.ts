@@ -53,4 +53,33 @@ describe('LookupCommunitySongQuery', () => {
     const result = await query.lookup('c-1', 'non-existent');
     expect(result).toBeNull();
   });
+
+  it('passes includeInactive through when resolving history', async () => {
+    mockGetCommunitySongs.execute.mockResolvedValue([]);
+
+    await query.lookup('c-1', 'fs-1', { includeInactive: true });
+    expect(mockGetCommunitySongs.execute).toHaveBeenCalledWith({
+      communityId: 'c-1',
+      songId: 'fs-1',
+      includeInactive: true,
+    });
+  });
+
+  it('resolves many songs in one pass and skips the call for no ids', async () => {
+    mockGetCommunitySongs.execute.mockResolvedValue([{ id: 'a' }, { id: 'b' }]);
+
+    const result = await query.lookupMany('c-1', ['a', 'b'], {
+      includeInactive: true,
+    });
+    expect(result.map((s) => s.id)).toEqual(['a', 'b']);
+    expect(mockGetCommunitySongs.execute).toHaveBeenCalledWith({
+      communityId: 'c-1',
+      songIds: ['a', 'b'],
+      includeInactive: true,
+    });
+
+    mockGetCommunitySongs.execute.mockClear();
+    expect(await query.lookupMany('c-1', [])).toEqual([]);
+    expect(mockGetCommunitySongs.execute).not.toHaveBeenCalled();
+  });
 });
