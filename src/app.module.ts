@@ -6,6 +6,7 @@ import { IdentityModule } from './identity/identity.module';
 import { LibraryModule } from './library';
 import { LibraryAdminModule } from './library-admin';
 import { NotificationsModule } from './notifications';
+import { RehearsalLogModule } from './rehearsal-log';
 import { RepertoireModule } from './repertoire';
 import { PeopleModule } from './people';
 import { PerformanceLogModule } from './performance-log';
@@ -24,6 +25,7 @@ import { SuperadminModule } from './superadmin';
     RepertoireModule,
     PeopleModule,
     PerformanceLogModule,
+    RehearsalLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

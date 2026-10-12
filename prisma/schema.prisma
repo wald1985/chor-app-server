@@ -41,6 +41,7 @@ model Community {
   songThemeAssignments SongThemeAssignment[]
   people               Person[]
   performances         Performance[]
+  rehearsals           Rehearsal[]
 
   @@map("communities")
 }
@@ -296,4 +297,35 @@ model Performance {
 
   @@index([communityId, date])
   @@map("performances")
+}
+
+model Rehearsal {
+  id             String   @id @default(uuid())
+  communityId    String
+  date           DateTime @db.Date
+  warmUpLeaderId String?
+  note           String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  community Community        @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  entries   RehearsalEntry[]
+
+  @@unique([communityId, date])
+  @@map("rehearsals")
+}
+
+model RehearsalEntry {
+  id          String   @id @default(uuid())
+  rehearsalId String
+  songId      String
+  pianistId   String?
+  conductorId String?
+  note        String?
+  createdAt   DateTime @default(now())
+
+  rehearsal Rehearsal @relation(fields: [rehearsalId], references: [id], onDelete: Cascade)
+
+  @@index([rehearsalId, createdAt])
+  @@map("rehearsal_entries")
 }

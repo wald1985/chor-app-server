@@ -92,6 +92,21 @@ const moduleBoundaries = [
       'Do not reach into performance-log internals directly. Import from performance-log root/barrel.',
   },
   {
+    name: 'rehearsal-log',
+    patterns: [
+      '**/rehearsal-log/domain',
+      '**/rehearsal-log/domain/**',
+      '**/rehearsal-log/application',
+      '**/rehearsal-log/application/**',
+      '**/rehearsal-log/infrastructure',
+      '**/rehearsal-log/infrastructure/**',
+      '**/rehearsal-log/interface',
+      '**/rehearsal-log/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into rehearsal-log internals directly. Import from rehearsal-log root/barrel.',
+  },
+  {
     name: 'people',
     patterns: [
       '**/people/domain',
