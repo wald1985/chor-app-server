@@ -8,6 +8,7 @@ import { LibraryAdminModule } from './library-admin';
 import { NotificationsModule } from './notifications';
 import { RepertoireModule } from './repertoire';
 import { PeopleModule } from './people';
+import { PerformanceLogModule } from './performance-log';
 import { PrismaModule } from './shared/prisma/prisma.module';
 import { SuperadminModule } from './superadmin';
 
@@ -22,6 +23,7 @@ import { SuperadminModule } from './superadmin';
     LibraryAdminModule,
     RepertoireModule,
     PeopleModule,
+    PerformanceLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -77,6 +77,21 @@ const moduleBoundaries = [
       'Do not reach into superadmin internals directly. Import from superadmin root/barrel.',
   },
   {
+    name: 'performance-log',
+    patterns: [
+      '**/performance-log/domain',
+      '**/performance-log/domain/**',
+      '**/performance-log/application',
+      '**/performance-log/application/**',
+      '**/performance-log/infrastructure',
+      '**/performance-log/infrastructure/**',
+      '**/performance-log/interface',
+      '**/performance-log/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into performance-log internals directly. Import from performance-log root/barrel.',
+  },
+  {
     name: 'people',
     patterns: [
       '**/people/domain',

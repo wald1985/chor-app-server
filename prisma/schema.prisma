@@ -14,6 +14,7 @@ enum CommunityRole {
 enum CommunityPermission {
   PEOPLE_MANAGE
   REPERTOIRE_MANAGE
+  SINGING_LOG_MANAGE
 }
 
 enum ThemeSource {
@@ -39,6 +40,7 @@ model Community {
   themes               Theme[]
   songThemeAssignments SongThemeAssignment[]
   people               Person[]
+  performances         Performance[]
 
   @@map("communities")
 }
@@ -277,4 +279,21 @@ model Person {
   @@unique([communityId, nameKey])
   @@index([communityId])
   @@map("people")
+}
+
+model Performance {
+  id          String   @id @default(uuid())
+  communityId String
+  date        DateTime @db.Date
+  songId      String
+  pianistId   String?
+  conductorId String?
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([communityId, date])
+  @@map("performances")
 }
