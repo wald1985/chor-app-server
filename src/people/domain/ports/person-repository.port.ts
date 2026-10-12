@@ -10,6 +10,7 @@ export interface ListPeopleOptions {
 
 export interface PersonRepository {
   findById(communityId: string, id: string): Promise<Person | null>;
+  findByIds(communityId: string, ids: string[]): Promise<Person[]>;
   findByNameKey(communityId: string, nameKey: string): Promise<Person | null>;
   list(communityId: string, options?: ListPeopleOptions): Promise<Person[]>;
   save(person: Person): Promise<void>;

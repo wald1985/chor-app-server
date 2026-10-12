@@ -29,6 +29,16 @@ export class PrismaPersonRepository implements PersonRepository {
     return record ? this.toDomain(record) : null;
   }
 
+  async findByIds(communityId: string, ids: string[]): Promise<Person[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+    const records = await this.prisma.person.findMany({
+      where: { communityId, id: { in: ids } },
+    });
+    return records.map((record) => this.toDomain(record));
+  }
+
   async findByNameKey(
     communityId: string,
     nameKey: string,

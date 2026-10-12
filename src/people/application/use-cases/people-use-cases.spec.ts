@@ -24,6 +24,14 @@ class InMemoryPersonRepository implements PersonRepository {
     return Promise.resolve(person?.communityId === communityId ? person : null);
   }
 
+  findByIds(communityId: string, ids: string[]) {
+    return Promise.resolve(
+      ids
+        .map((id) => this.items.get(id))
+        .filter((p): p is Person => p?.communityId === communityId),
+    );
+  }
+
   findByNameKey(communityId: string, nameKey: string) {
     const found = [...this.items.values()].find(
       (p) => p.communityId === communityId && p.nameKey === nameKey,
