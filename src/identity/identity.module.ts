@@ -29,8 +29,11 @@ import { CryptoResetTokenGenerator } from './infrastructure/security/crypto-rese
 import { JwtTokenIssuer } from './infrastructure/security/jwt-token-issuer';
 import { JwtStrategy } from './infrastructure/security/jwt.strategy';
 
+import { ListCommunityMembersUseCase } from './application/use-cases/list-community-members.use-case';
+import { SetMemberPermissionsUseCase } from './application/use-cases/set-member-permissions.use-case';
 import { ResolveMembershipUseCase } from './application/use-cases/resolve-membership.use-case';
 import { AuthController } from './interface/controllers/auth.controller';
+import { MembersController } from './interface/controllers/members.controller';
 import { CommunityMemberGuard } from './interface/guards/community-member.guard';
 import { JwtAuthGuard } from './interface/guards/jwt-auth.guard';
 
@@ -52,7 +55,7 @@ import { JwtAuthGuard } from './interface/guards/jwt-auth.guard';
       }),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, MembersController],
   providers: [
     RegisterUseCase,
     LoginUseCase,
@@ -75,6 +78,8 @@ import { JwtAuthGuard } from './interface/guards/jwt-auth.guard';
     { provide: PASSWORD_HASHER, useClass: BcryptPasswordHasher },
     { provide: TOKEN_ISSUER, useClass: JwtTokenIssuer },
     ResolveMembershipUseCase,
+    ListCommunityMembersUseCase,
+    SetMemberPermissionsUseCase,
     JwtAuthGuard,
     CommunityMemberGuard,
   ],
