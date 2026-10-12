@@ -114,6 +114,13 @@ Russian text use the English names from the glossary (e.g. `Person`,
   (deferred). Spec: `../chor-app-docs/openspec/changes/add-people/`.
   Migration `20261012160000_people` is written but must be applied
   (`prisma migrate deploy`); e2e `test/people/` not yet run.
+- **Performance Log / Rehearsal Log** (`src/performance-log/`,
+  `src/rehearsal-log/`): *Vortrag* and *Chorprobe* under
+  `/communities/:communityId/performances|rehearsals`; writes need
+  `SINGING_LOG_MANAGE`, songs/people are referenced by id (validated on
+  write, resolved on read). Migrations `performance_log` and `rehearsal_log`
+  are written but must be applied (`prisma migrate deploy`); e2e not yet run.
+  Docs: `docs/feature/singing_log/SINGING_LOG_API.md`.
 - Prisma + PostgreSQL connected (`prisma/schema.prisma`,
   `prisma.config.ts` — Prisma 7 reads the connection string from
   `prisma.config.ts`/`@prisma/adapter-pg`, not from `schema.prisma`'s
