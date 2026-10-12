@@ -21,6 +21,11 @@ enum ThemeSource {
   COMMUNITY
 }
 
+enum PersonRole {
+  PIANIST
+  CONDUCTOR
+}
+
 model Community {
   id        String   @id @default(uuid())
   name      String
@@ -33,6 +38,7 @@ model Community {
   bookAttachments      BookAttachment[]
   themes               Theme[]
   songThemeAssignments SongThemeAssignment[]
+  people               Person[]
 
   @@map("communities")
 }
@@ -256,3 +262,19 @@ model SongThemeAssignment {
   @@map("song_theme_assignments")
 }
 
+model Person {
+  id          String       @id @default(uuid())
+  communityId String
+  name        String
+  nameKey     String
+  roles       PersonRole[]
+  archivedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, nameKey])
+  @@index([communityId])
+  @@map("people")
+}

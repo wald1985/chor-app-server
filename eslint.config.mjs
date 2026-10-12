@@ -76,6 +76,21 @@ const moduleBoundaries = [
     errorMessage:
       'Do not reach into superadmin internals directly. Import from superadmin root/barrel.',
   },
+  {
+    name: 'people',
+    patterns: [
+      '**/people/domain',
+      '**/people/domain/**',
+      '**/people/application',
+      '**/people/application/**',
+      '**/people/infrastructure',
+      '**/people/infrastructure/**',
+      '**/people/interface',
+      '**/people/interface/**',
+    ],
+    errorMessage:
+      'Do not reach into people internals directly. Import from people root/barrel.',
+  },
 ];
 
 const getForbiddenPatternsFor = (excludeModuleName) =>
@@ -203,4 +218,3 @@ export default tseslint.config(
     },
   },
 );
-

@@ -106,6 +106,14 @@ Russian text use the English names from the glossary (e.g. `Person`,
   `../chor-app-docs/openspec/specs/identity/registration-and-login/spec.md`
   (once archived; until then see
   `../chor-app-docs/openspec/changes/add-identity-community-auth/`).
+- **People** (`src/people/`): `Person` (pianist/conductor) per Community,
+  combinable roles `PIANIST`/`CONDUCTOR`, archive instead of delete, name
+  unique per Community (case-insensitive, archived included). Endpoints
+  under `/communities/:communityId/people` (list/get for any member;
+  create/patch/archive/restore need `PEOPLE_MANAGE`). Not linked to `User`
+  (deferred). Spec: `../chor-app-docs/openspec/changes/add-people/`.
+  Migration `20261012160000_people` is written but must be applied
+  (`prisma migrate deploy`); e2e `test/people/` not yet run.
 - Prisma + PostgreSQL connected (`prisma/schema.prisma`,
   `prisma.config.ts` — Prisma 7 reads the connection string from
   `prisma.config.ts`/`@prisma/adapter-pg`, not from `schema.prisma`'s
